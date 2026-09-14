@@ -1,0 +1,9 @@
+# Non-sensitive runtime values. Kubernetes injects these via authz-config.
+authz:
+  config:
+    SERVICE_VERSION: "v1"
+    READ_TIMEOUT_SECONDS: "10"
+    SHUTDOWN_TIMEOUT_SECONDS: "5"
+    AUTHZ_POLICY_PATH: "/etc/authz/policy.json"
+    EVENTS_URL: "http://events.prd.svc.cluster.local:8080/ingest"
+    SERVICE_NAME: "authz"

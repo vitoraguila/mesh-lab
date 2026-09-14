@@ -1,0 +1,30 @@
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: events-from-gateway
+spec:
+  selector:
+    matchLabels:
+      app: events
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/{{ .Values.global.gateway.serviceAccount }}"
+      to:
+        - operation:
+            paths: ["/events"]
+            methods: [GET]
+            ports: ["8080"]
+    - from:
+        - source:
+            principals:
+              {{- range list "catalog" "orders" "inventory" "payments" "reviews" "graphql" "grpc" "authz" }}
+              - "cluster.local/ns/{{ $.Release.Namespace }}/sa/{{ . }}"
+              {{- end }}
+      to:
+        - operation:
+            paths: ["/ingest"]
+            methods: [POST]
+            ports: ["8080"]

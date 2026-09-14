@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rabbitmq-config
+  labels:
+    {{- include "rabbitmq.labels" . | nindent 4 }}
+data:
+  APP_ENV: {{ .Values.global.environment | quote }}
+  RABBITMQ_NODENAME: "rabbit@localhost"
+  {{- range $key, $value := .Values.config }}
+  {{- if has $key (list "APP_ENV" "RABBITMQ_NODENAME" "RABBITMQ_DEFAULT_USER" "RABBITMQ_DEFAULT_PASS") }}
+  {{- fail (printf "%s is managed by the chart; configure topology in global values" $key) }}
+  {{- end }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}

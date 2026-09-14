@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "replicaCount": {"type": "integer", "minimum": 1, "maximum": 1},
+    "global": {"type": "object", "properties": {"environment": {"enum": ["stg", "prd"]}}},
+    "image": {"type": "object", "properties": {"tag": {"type": "string", "minLength": 1}, "pullPolicy": {"enum": ["IfNotPresent", "Never", "Always"]}}},
+    "service": {"type": "object", "properties": {"port": {"type": "integer", "minimum": 1, "maximum": 65535}}},
+    "scrape": {
+      "type": "object",
+      "properties": {
+        "interval": {"type": "string", "minLength": 2},
+        "timeout": {"type": "string", "minLength": 2},
+        "sidecarPort": {"type": "integer", "minimum": 1, "maximum": 65535},
+        "sidecarPath": {"type": "string", "minLength": 1}
+      }
+    },
+    "retention": {"type": "string", "minLength": 2},
+    "readers": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1}
+  }
+}

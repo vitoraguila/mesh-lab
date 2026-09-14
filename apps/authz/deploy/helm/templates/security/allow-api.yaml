@@ -1,0 +1,19 @@
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: authz-from-api
+spec:
+  selector:
+    matchLabels:
+      app: authz
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              {{- range .Values.allowedServiceAccounts }}
+              - "cluster.local/ns/{{ $.Release.Namespace }}/sa/{{ . }}"
+              {{- end }}
+      to:
+        - operation:
+            ports: ["8080"]

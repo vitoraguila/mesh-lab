@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-provisioning
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+data:
+  datasource.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: {{ .Values.datasource.name }}
+        type: prometheus
+        access: proxy
+        isDefault: true
+        url: http://{{ .Values.datasource.service }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.datasource.port }}
+        jsonData:
+          timeInterval: 10s
+  dashboards.yaml: |
+    apiVersion: 1
+    providers:
+      - name: mesh-study
+        folder: Mesh study
+        type: file
+        disableDeletion: true
+        options:
+          path: /var/lib/grafana/dashboards
+  mesh.json: |
+    {
+      "title": "Mesh study · {{ .Values.global.environment }}",
+      "uid": "mesh-study-{{ .Values.global.environment }}",
+      "timezone": "browser",
+      "refresh": "10s",
+      "time": {"from": "now-30m", "to": "now"},
+      "panels": [
+        {
+          "type": "timeseries", "title": "Requests reaching handlers (per second)",
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+          "targets": [{"expr": "sum by (service) (rate(mesh_requests_total[1m]))", "legendFormat": "{{`{{service}}`}}"}]
+        },
+        {
+          "type": "timeseries", "title": "Mesh decisions by response code",
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+          "targets": [{"expr": "sum by (response_code) (rate(istio_requests_total[1m]))", "legendFormat": "{{`{{response_code}}`}}"}]
+        },
+        {
+          "type": "timeseries", "title": "Handler latency p95",
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+          "targets": [{"expr": "histogram_quantile(0.95, sum by (le, service) (rate(mesh_request_duration_seconds_bucket[5m])))", "legendFormat": "{{`{{service}}`}}"}]
+        },
+        {
+          "type": "timeseries", "title": "Telemetry events queued for the broker",
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+          "targets": [{"expr": "sum by (service) (rate(mesh_events_published_total[1m]))", "legendFormat": "{{`{{service}}`}}"}]
+        }
+      ]
+    }

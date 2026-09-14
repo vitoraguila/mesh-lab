@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: graphql
+  labels:
+    {{- include "graphql.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    app: graphql
+  ports:
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: http
+      appProtocol: http

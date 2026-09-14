@@ -1,0 +1,36 @@
+global:
+  environment: stg
+  gateway:
+    name: internal-gateway
+    serviceAccount: internal-gateway
+    port: 80
+# Upstream image. This app has no source folder and is never built locally.
+image:
+  repository: grafana/grafana
+  tag: 12.3.1
+  pullPolicy: IfNotPresent
+replicaCount: 1
+podAnnotations: {}
+nodeSelector: {}
+tolerations: []
+config: {}
+secrets: {}
+existingEnvSecret: ""
+# Local viewer login, generated per environment into ignored .local files.
+credentials:
+  username: ""
+  password: ""
+service:
+  port: 3000
+datasource:
+  name: mesh-prometheus
+  # Resolved against the environment's own Prometheus, never another namespace.
+  service: prometheus
+  port: 9090
+resources:
+  requests: {cpu: 50m, memory: 160Mi}
+  limits: {cpu: 700m, memory: 512Mi}
+trafficPolicy:
+  connectionPool:
+    tcp:
+      maxConnections: 30

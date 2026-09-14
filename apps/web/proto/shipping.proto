@@ -1,0 +1,6 @@
+syntax = "proto3";
+package shipping.v1;
+option go_package = "study.local/grpc/gen;shippingv1";
+service ShippingService { rpc Quote(QuoteRequest) returns (QuoteResponse); }
+message QuoteRequest { string destination = 1; double weight_kg = 2; }
+message QuoteResponse { string destination = 1; double price = 2; int32 estimated_days = 3; string environment = 4; string currency = 5; }

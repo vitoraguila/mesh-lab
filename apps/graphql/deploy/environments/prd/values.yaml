@@ -1,0 +1,8 @@
+# Values for the graphql dependency in the platform chart.
+graphql:
+  replicaCount: 2
+  image:
+    tag: broker-20260912
+  route:
+    path: /graphql
+    timeout: 3s

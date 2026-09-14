@@ -1,0 +1,133 @@
+title: Shipping quotes
+description: Send a typed Protobuf request over HTTP/2 and calculate shipping.
+language: go
+operations:
+- id: quote
+  title: Calculate shipping
+  protocol: grpc
+  method: POST
+  path: /shipping.v1.ShippingService/Quote
+  input: &id001
+    destination: PT
+    weightKg: 2
+  proto: proto/shipping.proto
+  rpcService: shipping.v1.ShippingService
+  rpcMethod: Quote
+  examples:
+  - title: Admin shipping quote
+    identity: admin
+    input: *id001
+steps:
+- id: browser
+  title: Prepare the request
+  description: You choose an operation and identity. The browser creates a request
+    ID before calling the Next.js server. Your token stays in memory.
+  detail: Request inputs and the final response belong to this browser session. They
+    are not published to the environment event feed.
+  sources:
+  - file: apps/web/app/studio.tsx
+    anchor: async function runOperation
+    context: 12
+    pointer: /spec
+- id: next
+  title: Next.js forwards the call
+  description: The server attaches the caller’s credential and correlation ID, then
+    sends the operation to the environment-local gateway.
+  detail: REST and GraphQL use HTTP. gRPC is serialized to Protobuf and sent over
+    HTTP/2. The browser never needs direct cluster access.
+  sources:
+  - file: apps/web/lib/upstream.ts
+    anchor: export async function callUpstream
+    context: 15
+    pointer: /spec
+- id: gateway
+  title: Route through the mesh
+  description: The web sidecar originates mTLS with explicit SNI. The gateway’s general
+    route delegates to this app’s route.
+  detail: These hops are explained from configuration. The lab does not capture independent
+    gateway timing spans.
+  sources:
+  - file: apps/web/deploy/helm/templates/routes/internal-gateway.yaml
+    anchor: '      sni:'
+    context: 5
+    pointer: /spec/trafficPolicy/tls
+  - file: deploy/helm/platform/templates/routes.yaml
+    anchor: '      delegate:'
+    context: 5
+    pointer: /spec/http
+  - file: apps/grpc/deploy/helm/templates/routes/virtual-service.yaml
+    anchor: '            exact:'
+    context: 5
+    pointer: /spec/http/0
+- id: envoy
+  title: The API sidecar enforces access
+  description: Before business code can run, the API’s Envoy requires the correct
+    gateway identity and invokes centralized authorization.
+  detail: ALLOW and CUSTOM must both pass. A valid token alone does not permit a direct
+    web-to-API bypass.
+  sources:
+  - file: apps/grpc/deploy/helm/templates/security/allow-gateway.yaml
+    anchor: '            principals:'
+    context: 5
+    pointer: /spec/rules
+  - file: apps/grpc/deploy/helm/templates/security/external-authorization.yaml
+    anchor: '  action: CUSTOM'
+    context: 5
+    pointer: /spec
+- id: authz
+  title: Check the identity and scope
+  description: Istio asks authz whether this credential may access the requested method
+    and path. A denial ends the business request here.
+  detail: The event reports the actual allow/deny decision. Tokens and policy credentials
+    are never included. An unavailable provider fails closed.
+  sources:
+  - file: apps/authz/main.go
+    anchor: func authorize(
+    context: 38
+    pointer: /spec
+  - file: apps/authz/deploy/environments/{env}/policy.yaml
+    anchor: '  policy:'
+    context: 5
+    pointer: /spec
+  - file: deploy/istio/istiod-values.yaml
+    anchor: '  extensionProviders:'
+    context: 23
+    pointer: /spec
+- id: handler
+  title: Execute the business operation
+  description: Send a typed Protobuf request over HTTP/2 and calculate shipping. This
+    handler runs only after both mesh checks pass.
+  detail: Application code handles business data; it does not make authorization decisions.
+    A missing event means execution was not observed, rather than proving it never
+    happened.
+  sources:
+  - file: apps/grpc/main.go
+    anchor: func (shippingServer) Quote
+    context: 22
+    pointer: /spec
+- id: response
+  title: Inspect the returned data
+  description: Next.js returns the upstream result and timing. HTTP status, GraphQL
+    errors, and native gRPC codes describe different kinds of outcomes.
+  detail: The aggregate endpoint can return HTTP 200 while individual upstream requests
+    are denied. Always inspect each operation result.
+  sources:
+  - file: apps/web/app/api/playground/route.ts
+    anchor: export async function POST
+    context: 20
+    pointer: /spec
+- id: events
+  title: Observe without blocking traffic
+  description: Authz and the API publish small metadata events to the event service.
+    A separate WebSocket carries these events to the learning studio.
+  detail: Telemetry is best-effort and independent of authorization. It contains no
+    bodies or credentials. The in-memory replay buffer resets when events restarts.
+  sources:
+  - file: apps/shared/telemetry/events.go
+    anchor: func Emit(
+    context: 24
+    pointer: /spec
+  - file: apps/events/main.go
+    anchor: func (h *hub) stream(
+    context: 18
+    pointer: /spec

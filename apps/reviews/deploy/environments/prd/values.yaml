@@ -1,0 +1,8 @@
+# Values for the reviews dependency in the platform chart.
+reviews:
+  replicaCount: 2
+  image:
+    tag: broker-20260912
+  route:
+    path: /reviews
+    timeout: 3s

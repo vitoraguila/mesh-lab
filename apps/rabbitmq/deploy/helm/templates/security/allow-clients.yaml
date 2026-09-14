@@ -1,0 +1,21 @@
+# TCP carries no paths or methods, so this policy authorizes by workload identity
+# and port only. HTTP services additionally use a CUSTOM external check.
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: rabbitmq-from-workloads
+spec:
+  selector:
+    matchLabels:
+      app: rabbitmq
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              {{- range concat .Values.producers .Values.consumers }}
+              - "cluster.local/ns/{{ $.Release.Namespace }}/sa/{{ . }}"
+              {{- end }}
+      to:
+        - operation:
+            ports: ["5672"]

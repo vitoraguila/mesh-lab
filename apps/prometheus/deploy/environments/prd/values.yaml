@@ -1,0 +1,8 @@
+# Values for the prometheus dependency in the platform chart.
+prometheus:
+  replicaCount: 1
+  image:
+    tag: v3.7.3
+  scrape:
+    interval: 10s
+  retention: 2h

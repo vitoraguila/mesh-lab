@@ -1,0 +1,15 @@
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: gateway-from-web
+spec:
+  selector:
+    matchLabels:
+      istio: {{ .Values.global.gateway.selector }}
+      environment: {{ .Values.global.environment }}
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/web"

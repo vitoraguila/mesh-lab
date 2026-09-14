@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-config
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+data:
+  GF_ANALYTICS_REPORTING_ENABLED: "false"
+  GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+  GF_USERS_ALLOW_SIGN_UP: "false"
+  GF_AUTH_ANONYMOUS_ENABLED: "false"
+  GF_PATHS_PROVISIONING: /etc/grafana/provisioning
+  # No egress to grafana.com from a local study cluster.
+  GF_PLUGINS_PREINSTALL_DISABLED: "true"
+  GF_PLUGIN_ADMIN_ENABLED: "false"
+  {{- range $key, $value := .Values.config }}
+  {{- if hasPrefix "GF_SECURITY_ADMIN" $key }}
+  {{- fail (printf "%s is a credential; put it in .local secrets, not config" $key) }}
+  {{- end }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}

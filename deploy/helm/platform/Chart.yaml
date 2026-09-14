@@ -1,0 +1,46 @@
+apiVersion: v2
+name: platform
+description: Environment composition and shared mesh boundary; apps own their manifests
+type: application
+version: 0.2.0
+appVersion: "1.0.0"
+dependencies:
+  - name: web
+    version: 0.2.0
+    repository: file://../../../apps/web/deploy/helm
+  - name: catalog
+    version: 0.2.0
+    repository: file://../../../apps/catalog/deploy/helm
+  - name: orders
+    version: 0.2.0
+    repository: file://../../../apps/orders/deploy/helm
+  - name: inventory
+    version: 0.2.0
+    repository: file://../../../apps/inventory/deploy/helm
+  - name: payments
+    version: 0.2.0
+    repository: file://../../../apps/payments/deploy/helm
+  - name: reviews
+    version: 0.2.0
+    repository: file://../../../apps/reviews/deploy/helm
+  - name: authz
+    version: 0.2.0
+    repository: file://../../../apps/authz/deploy/helm
+  - name: graphql
+    version: 0.2.0
+    repository: file://../../../apps/graphql/deploy/helm
+  - name: grpc
+    version: 0.2.0
+    repository: file://../../../apps/grpc/deploy/helm
+  - name: events
+    version: 0.2.0
+    repository: file://../../../apps/events/deploy/helm
+  - name: rabbitmq
+    version: 0.2.0
+    repository: file://../../../apps/rabbitmq/deploy/helm
+  - name: prometheus
+    version: 0.2.0
+    repository: file://../../../apps/prometheus/deploy/helm
+  - name: grafana
+    version: 0.2.0
+    repository: file://../../../apps/grafana/deploy/helm

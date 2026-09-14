@@ -1,0 +1,4 @@
+# Non-sensitive runtime values. Kubernetes injects these via grafana-config.
+grafana:
+  config:
+    GF_LOG_LEVEL: "warn"

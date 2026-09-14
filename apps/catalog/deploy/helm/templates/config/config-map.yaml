@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: catalog-config
+  labels:
+    {{- include "catalog.labels" . | nindent 4 }}
+data:
+  APP_ENV: {{ .Values.global.environment | quote }}
+  HTTP_PORT: "8080"
+  {{- range $key, $value := .Values.config }}
+  {{- if has $key (list "APP_ENV" "HTTP_PORT" "INTERNAL_API_URL") }}
+  {{- fail (printf "%s is managed by the chart; configure topology in global values" $key) }}
+  {{- end }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}

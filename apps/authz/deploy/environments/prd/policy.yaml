@@ -1,0 +1,11 @@
+# Shared authorization behavior, owned by authz. Credentials are generated locally.
+authz:
+  policy:
+    # Methods each path accepts. Anything not listed accepts GET only.
+    methods:
+      /graphql: [POST]
+      /shipping.v1.ShippingService/Quote: [POST]
+      /payments: [GET, POST]
+    adminPaths: [/catalog, /orders, /inventory, /payments, /reviews, /graphql, /shipping.v1.ShippingService/Quote, /events]
+    readerPaths: [/catalog, /inventory, /reviews, /graphql, /events]
+  allowedServiceAccounts: [catalog, orders, inventory, payments, reviews, graphql, grpc, events]

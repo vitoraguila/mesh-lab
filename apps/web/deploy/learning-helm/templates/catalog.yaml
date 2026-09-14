@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: learning-catalog
+binaryData:
+  workspace.gz: {{ required "workspace catalog required" .Values.workspace | quote }}
+  active.gz: {{ required "active catalog required" .Values.active | quote }}

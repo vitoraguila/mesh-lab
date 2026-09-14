@@ -1,0 +1,8 @@
+# Values for the orders dependency in the platform chart.
+orders:
+  replicaCount: 1
+  image:
+    tag: broker-20260912
+  route:
+    path: /orders
+    timeout: 5s

@@ -1,0 +1,18 @@
+# Next.js sends HTTP; its sidecar originates mTLS with the gateway's SNI.
+apiVersion: networking.istio.io/v1
+kind: DestinationRule
+metadata:
+  name: internal-gateway-mtls
+spec:
+  exportTo: ["."]
+  host: {{ .Values.global.gateway.name }}.{{ .Release.Namespace }}.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+      sni: {{ .Values.global.gateway.name }}.{{ .Release.Namespace }}.svc.cluster.local
+    connectionPool:
+      tcp:
+        maxConnections: 100
+      http:
+        http1MaxPendingRequests: 100
+        http2MaxRequests: 1000

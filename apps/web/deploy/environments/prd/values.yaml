@@ -1,0 +1,7 @@
+# Values for the web dependency in the platform chart.
+web:
+  replicaCount: 2
+  image:
+    tag: broker-20260912
+  demoTokens:
+    enabled: true

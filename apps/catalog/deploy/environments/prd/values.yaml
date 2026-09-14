@@ -1,0 +1,8 @@
+# Values for the catalog dependency in the platform chart.
+catalog:
+  replicaCount: 2
+  image:
+    tag: broker-20260912
+  route:
+    path: /catalog
+    timeout: 3s

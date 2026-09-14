@@ -1,0 +1,33 @@
+global:
+  environment: stg
+  gateway:
+    name: internal-gateway
+    serviceAccount: internal-gateway
+    port: 80
+image:
+  repository: mesh-study/web
+  tag: dev
+  pullPolicy: IfNotPresent
+replicaCount: 1
+podAnnotations: {}
+nodeSelector: {}
+tolerations: []
+# Runtime variables are injected by Kubernetes, never by Docker build args.
+config: {}
+# Optional app-specific sensitive variables. Use ignored local files, not Git.
+secrets: {}
+# Use a separately managed Secret instead of the chart-created env Secret.
+existingEnvSecret: ""
+# Server-side metric reads for the studio's observability lane.
+metricsSource:
+  enabled: true
+  service: prometheus
+  port: 9090
+service:
+  port: 3000
+resources:
+  requests: {cpu: 100m, memory: 128Mi}
+  limits: {cpu: "1", memory: 384Mi}
+
+demoTokens:
+  enabled: false

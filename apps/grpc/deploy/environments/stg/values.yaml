@@ -1,0 +1,8 @@
+# Values for the grpc dependency in the platform chart.
+grpc:
+  replicaCount: 1
+  image:
+    tag: broker-20260912
+  route:
+    path: /shipping.v1.ShippingService/Quote
+    timeout: 5s

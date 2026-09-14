@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-config
+  labels:
+    {{- include "web.labels" . | nindent 4 }}
+data:
+  APP_ENV: {{ .Values.global.environment | quote }}
+  INTERNAL_API_URL: "http://{{ .Values.global.gateway.name }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.global.gateway.port }}"
+  {{- if .Values.metricsSource.enabled }}
+  # Read-only, server-side only. The browser never talks to Prometheus.
+  PROMETHEUS_URL: "http://{{ .Values.metricsSource.service }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.metricsSource.port }}"
+  {{- end }}
+  {{- range $key, $value := .Values.config }}
+  {{- if has $key (list "APP_ENV" "HTTP_PORT" "INTERNAL_API_URL" "PROMETHEUS_URL") }}
+  {{- fail (printf "%s is managed by the chart; configure topology in global values" $key) }}
+  {{- end }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}

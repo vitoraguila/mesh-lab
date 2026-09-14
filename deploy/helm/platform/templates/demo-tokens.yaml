@@ -1,0 +1,9 @@
+{{- if .Values.web.demoTokens.enabled }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: web-demo-tokens
+type: Opaque
+stringData:
+  tokens.json: {{ dict "admin" .Values.authz.credentials.adminToken "reader" .Values.authz.credentials.readerToken | toJson | quote }}
+{{- end }}

@@ -1,0 +1,5 @@
+# Values for the authz dependency in the platform chart.
+authz:
+  replicaCount: 2
+  image:
+    tag: broker-20260912

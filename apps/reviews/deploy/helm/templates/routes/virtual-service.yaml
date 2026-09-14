@@ -1,0 +1,18 @@
+# Delegated by deploy/helm/platform/templates/routes.yaml. Delegates omit hosts/gateways.
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: reviews-routes
+spec:
+  exportTo: ["."]
+  http:
+    - name: reviews
+      match:
+        - uri:
+            exact: {{ .Values.route.path | quote }}
+      timeout: {{ .Values.route.timeout }}
+      route:
+        - destination:
+            host: reviews.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: {{ .Values.service.port }}

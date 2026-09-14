@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  labels:
+    {{- include "web.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+        version: v1
+        {{- include "web.labels" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/config/config-map.yaml") . | sha256sum }}
+        checksum/env-secret: {{ include (print $.Template.BasePath "/config/env-secret.yaml") . | sha256sum }}
+        proxy.istio.io/config: '{"holdApplicationUntilProxyStarts":true}'
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: web
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: web
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 3000
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          {{- if .Values.demoTokens.enabled }}
+          env:
+            - name: DEMO_TOKENS_ENABLED
+              value: "true"
+          {{- end }}
+          envFrom:
+            - configMapRef:
+                name: web-config
+            {{- if .Values.existingEnvSecret }}
+            - secretRef:
+                name: {{ .Values.existingEnvSecret }}
+            {{- else if .Values.secrets }}
+            - secretRef:
+                name: web-env
+            {{- end }}
+          volumeMounts:
+            - name: learning
+              mountPath: /etc/mesh-learning
+              readOnly: true
+            {{- if .Values.demoTokens.enabled }}
+            - name: demo-tokens
+              mountPath: /etc/mesh-demo
+              readOnly: true
+            {{- end }}
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: learning
+          configMap:
+            name: learning-catalog
+            optional: true
+        {{- if .Values.demoTokens.enabled }}
+        - name: demo-tokens
+          secret:
+            secretName: web-demo-tokens
+        {{- end }}
+        - name: tmp
+          emptyDir: {}

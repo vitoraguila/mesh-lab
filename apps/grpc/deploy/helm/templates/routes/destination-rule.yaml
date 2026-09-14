@@ -1,0 +1,11 @@
+apiVersion: networking.istio.io/v1
+kind: DestinationRule
+metadata:
+  name: grpc
+spec:
+  exportTo: ["."]
+  host: grpc.{{ .Release.Namespace }}.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+    {{- toYaml .Values.trafficPolicy | nindent 4 }}

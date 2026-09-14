@@ -1,0 +1,42 @@
+dependencies:
+- name: web
+  repository: file://../../../apps/web/deploy/helm
+  version: 0.2.0
+- name: catalog
+  repository: file://../../../apps/catalog/deploy/helm
+  version: 0.2.0
+- name: orders
+  repository: file://../../../apps/orders/deploy/helm
+  version: 0.2.0
+- name: inventory
+  repository: file://../../../apps/inventory/deploy/helm
+  version: 0.2.0
+- name: payments
+  repository: file://../../../apps/payments/deploy/helm
+  version: 0.2.0
+- name: reviews
+  repository: file://../../../apps/reviews/deploy/helm
+  version: 0.2.0
+- name: authz
+  repository: file://../../../apps/authz/deploy/helm
+  version: 0.2.0
+- name: graphql
+  repository: file://../../../apps/graphql/deploy/helm
+  version: 0.2.0
+- name: grpc
+  repository: file://../../../apps/grpc/deploy/helm
+  version: 0.2.0
+- name: events
+  repository: file://../../../apps/events/deploy/helm
+  version: 0.2.0
+- name: rabbitmq
+  repository: file://../../../apps/rabbitmq/deploy/helm
+  version: 0.2.0
+- name: prometheus
+  repository: file://../../../apps/prometheus/deploy/helm
+  version: 0.2.0
+- name: grafana
+  repository: file://../../../apps/grafana/deploy/helm
+  version: 0.2.0
+digest: sha256:56baab68e6c313b5f0670e8af7d3f4db59ff3226c1f445a4d94af4a05c8c74c1
+generated: "2026-09-12T13:46:54.500535+01:00"

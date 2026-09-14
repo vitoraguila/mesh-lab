@@ -1,0 +1,8 @@
+# Non-sensitive runtime values. Kubernetes injects these via payments-config.
+payments:
+  config:
+    SERVICE_VERSION: "v1"
+    READ_TIMEOUT_SECONDS: "10"
+    SHUTDOWN_TIMEOUT_SECONDS: "5"
+    EVENTS_URL: "http://events.stg.svc.cluster.local:8080/ingest"
+    SERVICE_NAME: "payments"

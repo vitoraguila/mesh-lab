@@ -1,0 +1,9 @@
+# Values for the grafana dependency in the platform chart.
+grafana:
+  replicaCount: 1
+  image:
+    tag: 12.3.1
+  datasource:
+    name: mesh-prometheus
+    service: prometheus
+    port: 9090

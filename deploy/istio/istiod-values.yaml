@@ -1,0 +1,37 @@
+pilot:
+  autoscaleEnabled: false
+  resources:
+    requests: {cpu: 100m, memory: 256Mi}
+    limits: {cpu: "1", memory: 512Mi}
+global:
+  proxy:
+    resources:
+      requests: {cpu: 25m, memory: 64Mi}
+      limits: {cpu: 500m, memory: 128Mi}
+meshConfig:
+  accessLogFile: /dev/stdout
+  accessLogEncoding: JSON
+  # Each sidecar scrapes its own application's /metrics and serves the merged
+  # result on 15020, so Prometheus needs one target per pod and no mTLS client.
+  enablePrometheusMerge: true
+  extensionProviders:
+    - name: study-authz-stg
+      envoyExtAuthzHttp:
+        service: authz.stg.svc.cluster.local
+        port: 8080
+        timeout: 2s
+        failOpen: false
+        statusOnError: "503"
+        includeRequestHeadersInCheck: [authorization, x-mesh-request-id]
+        headersToUpstreamOnAllow: [x-auth-subject]
+        headersToDownstreamOnDeny: [content-type]
+    - name: study-authz-prd
+      envoyExtAuthzHttp:
+        service: authz.prd.svc.cluster.local
+        port: 8080
+        timeout: 2s
+        failOpen: false
+        statusOnError: "503"
+        includeRequestHeadersInCheck: [authorization, x-mesh-request-id]
+        headersToUpstreamOnAllow: [x-auth-subject]
+        headersToDownstreamOnDeny: [content-type]

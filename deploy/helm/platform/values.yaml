@@ -1,0 +1,35 @@
+global:
+  environment: stg
+  gateway:
+    name: internal-gateway
+    serviceAccount: internal-gateway
+    selector: internal-gateway
+    port: 80
+    targetPort: 8443
+# This is the general routing index. Each delegate owns its exact match,
+# destination, timeout and traffic policy in apps/<name>/deploy/helm/templates/routes/.
+routes:
+  - name: catalog
+    prefix: /catalog
+    delegate: catalog-routes
+  - name: orders
+    prefix: /orders
+    delegate: orders-routes
+  - name: inventory
+    prefix: /inventory
+    delegate: inventory-routes
+  - name: payments
+    prefix: /payments
+    delegate: payments-routes
+  - name: reviews
+    prefix: /reviews
+    delegate: reviews-routes
+  - name: graphql
+    prefix: /graphql
+    delegate: graphql-routes
+  - name: grpc
+    prefix: /shipping.v1.ShippingService/
+    delegate: grpc-routes
+  - name: events
+    prefix: /events
+    delegate: events-routes

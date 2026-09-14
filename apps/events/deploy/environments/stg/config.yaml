@@ -1,0 +1,5 @@
+# Non-sensitive runtime values. Kubernetes injects these via events-config.
+events:
+  config:
+    READ_TIMEOUT_SECONDS: "10"
+    SHUTDOWN_TIMEOUT_SECONDS: "5"

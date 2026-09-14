@@ -1,0 +1,12 @@
+# AMQP is plain TCP. The client sidecars still originate mTLS to this workload.
+apiVersion: networking.istio.io/v1
+kind: DestinationRule
+metadata:
+  name: rabbitmq
+spec:
+  exportTo: ["."]
+  host: rabbitmq.{{ .Release.Namespace }}.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+    {{- toYaml .Values.trafficPolicy | nindent 4 }}

@@ -1,0 +1,15 @@
+# Reached only through a loopback port-forward, exactly like the web UI.
+# There is no gateway route, so nothing outside the cluster can reach it.
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: grafana-local-entry
+spec:
+  selector:
+    matchLabels:
+      app: grafana
+  action: ALLOW
+  rules:
+    - to:
+        - operation:
+            ports: ["3000"]

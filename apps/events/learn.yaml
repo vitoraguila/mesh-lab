@@ -1,0 +1,5 @@
+title: Live event stream
+description: A bounded in-memory pub/sub service with WebSocket subscriptions.
+language: go
+operations: []
+steps: []

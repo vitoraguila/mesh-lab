@@ -1,0 +1,8 @@
+# Values for the rabbitmq dependency in the platform chart.
+rabbitmq:
+  replicaCount: 1
+  image:
+    tag: 4.1.4-alpine
+  broker:
+    exchange: mesh.events
+    queue: mesh.events

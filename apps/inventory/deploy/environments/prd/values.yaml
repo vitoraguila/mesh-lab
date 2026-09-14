@@ -1,0 +1,8 @@
+# Values for the inventory dependency in the platform chart.
+inventory:
+  replicaCount: 2
+  image:
+    tag: broker-20260912
+  route:
+    path: /inventory
+    timeout: 3s

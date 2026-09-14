@@ -1,0 +1,18 @@
+# Delegated by deploy/helm/platform/templates/routes.yaml. Delegates omit hosts/gateways.
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: orders-routes
+spec:
+  exportTo: ["."]
+  http:
+    - name: orders
+      match:
+        - uri:
+            exact: {{ .Values.route.path | quote }}
+      timeout: {{ .Values.route.timeout }}
+      route:
+        - destination:
+            host: orders.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: {{ .Values.service.port }}

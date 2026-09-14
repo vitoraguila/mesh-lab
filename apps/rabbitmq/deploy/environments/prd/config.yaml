@@ -1,0 +1,4 @@
+# Non-sensitive runtime values. Kubernetes injects these via rabbitmq-config.
+rabbitmq:
+  config:
+    RABBITMQ_LOGS: "-"

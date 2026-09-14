@@ -1,0 +1,4 @@
+title: Event broker
+description: A RabbitMQ topic exchange and durable queue carrying telemetry between workloads.
+operations: []
+steps: []

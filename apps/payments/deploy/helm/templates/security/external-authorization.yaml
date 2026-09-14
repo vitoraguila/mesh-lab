@@ -1,0 +1,14 @@
+# CUSTOM and ALLOW must both succeed, at the destination sidecar.
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: payments-external-authorization
+spec:
+  selector:
+    matchLabels:
+      app: payments
+  action: CUSTOM
+  provider:
+    name: study-authz-{{ .Values.global.environment }}
+  rules:
+    - {}

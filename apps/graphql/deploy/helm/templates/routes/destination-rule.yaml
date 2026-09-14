@@ -1,0 +1,11 @@
+apiVersion: networking.istio.io/v1
+kind: DestinationRule
+metadata:
+  name: graphql
+spec:
+  exportTo: ["."]
+  host: graphql.{{ .Release.Namespace }}.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+    {{- toYaml .Values.trafficPolicy | nindent 4 }}

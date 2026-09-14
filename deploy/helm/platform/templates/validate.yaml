@@ -1,0 +1,3 @@
+{{- if ne .Release.Namespace .Values.global.environment }}
+{{- fail "Release namespace must match global.environment (stg or prd)" }}
+{{- end }}

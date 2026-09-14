@@ -1,0 +1,45 @@
+global:
+  environment: stg
+  gateway:
+    name: internal-gateway
+    serviceAccount: internal-gateway
+    port: 80
+image:
+  repository: mesh-study/orders
+  tag: dev
+  pullPolicy: IfNotPresent
+replicaCount: 1
+podAnnotations: {}
+nodeSelector: {}
+tolerations: []
+# Runtime variables are injected by Kubernetes, never by Docker build args.
+config: {}
+# Optional app-specific sensitive variables. Use ignored local files, not Git.
+secrets: {}
+# Use a separately managed Secret instead of the chart-created env Secret.
+existingEnvSecret: ""
+# Application metrics merged into the sidecar's Prometheus endpoint.
+metrics:
+  enabled: true
+  port: 8080
+  path: /metrics
+# Publish telemetry over the shared broker. Disable to fall back to direct HTTP.
+broker:
+  enabled: true
+  connectionName: mesh-broker
+service:
+  port: 8080
+resources:
+  requests: {cpu: 25m, memory: 32Mi}
+  limits: {cpu: 500m, memory: 128Mi}
+route:
+  path: /orders
+  timeout: 5s
+trafficPolicy:
+  connectionPool:
+    tcp:
+      maxConnections: 50
+  outlierDetection:
+    consecutive5xxErrors: 5
+    interval: 10s
+    baseEjectionTime: 30s

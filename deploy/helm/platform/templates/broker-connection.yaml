@@ -1,0 +1,18 @@
+# Non-secret broker topology shared by every producer and the events consumer.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.rabbitmq.broker.secretName }}
+data:
+  AMQP_EXCHANGE: {{ .Values.rabbitmq.broker.exchange | quote }}
+  AMQP_QUEUE: {{ printf "%s.%s" .Values.rabbitmq.broker.queue .Values.global.environment | quote }}
+  AMQP_ADDRESS: {{ printf "rabbitmq.%s.svc.cluster.local:%v" .Release.Namespace .Values.rabbitmq.service.port | quote }}
+---
+# The login itself stays in a Secret because the URL carries the password.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ printf "%s-credentials" .Values.rabbitmq.broker.secretName }}
+type: Opaque
+stringData:
+  AMQP_URL: {{ printf "amqp://%s:%s@rabbitmq.%s.svc.cluster.local:%v/" (required "Set rabbitmq.credentials.username" .Values.rabbitmq.credentials.username) (required "Set rabbitmq.credentials.password" .Values.rabbitmq.credentials.password) .Release.Namespace .Values.rabbitmq.service.port | quote }}

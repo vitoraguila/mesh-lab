@@ -1,0 +1,5 @@
+title: Authorization engine
+description: Shared credential and path checks called by API sidecars.
+language: go
+operations: []
+steps: []

@@ -1,0 +1,36 @@
+global:
+  environment: stg
+  gateway:
+    name: internal-gateway
+    serviceAccount: internal-gateway
+    port: 80
+# Upstream image. This app has no source folder and is never built locally.
+image:
+  repository: prom/prometheus
+  tag: v3.7.3
+  pullPolicy: IfNotPresent
+replicaCount: 1
+podAnnotations: {}
+nodeSelector: {}
+tolerations: []
+config: {}
+secrets: {}
+existingEnvSecret: ""
+service:
+  port: 9090
+scrape:
+  interval: 10s
+  timeout: 5s
+  # Istio merges each application's /metrics into the sidecar's endpoint.
+  sidecarPort: 15020
+  sidecarPath: /stats/prometheus
+retention: 2h
+resources:
+  requests: {cpu: 50m, memory: 192Mi}
+  limits: {cpu: 800m, memory: 640Mi}
+# Workload identities allowed to query this instance.
+readers: [web, grafana]
+trafficPolicy:
+  connectionPool:
+    tcp:
+      maxConnections: 40

@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  labels:
+    {{- include "prometheus.labels" . | nindent 4 }}
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: {{ .Values.scrape.interval }}
+      scrape_timeout: {{ .Values.scrape.timeout }}
+      external_labels:
+        environment: {{ .Values.global.environment | quote }}
+    scrape_configs:
+      # One job. Istio's Prometheus merge means the sidecar already serves both
+      # the application's own /metrics and Envoy's istio_* series on 15020,
+      # which is exempt from mTLS and from AuthorizationPolicy.
+      - job_name: mesh-workloads
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [{{ .Release.Namespace }}]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: "true"
+          - source_labels: [__meta_kubernetes_pod_phase]
+            action: drop
+            regex: (Succeeded|Failed|Pending)
+          - source_labels: [__meta_kubernetes_pod_ip]
+            action: replace
+            target_label: __address__
+            replacement: $1:{{ .Values.scrape.sidecarPort }}
+          - target_label: __metrics_path__
+            replacement: {{ .Values.scrape.sidecarPath }}
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: replace
+            target_label: app
+          - source_labels: [__meta_kubernetes_pod_name]
+            action: replace
+            target_label: pod
+          - source_labels: [__meta_kubernetes_namespace]
+            action: replace
+            target_label: namespace
+  {{- range $key, $value := .Values.config }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}

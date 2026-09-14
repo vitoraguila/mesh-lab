@@ -1,0 +1,4 @@
+apiVersion: v2
+name: learning-artifacts
+version: 0.1.0
+description: Read-only teaching artifacts; independent of application rollouts

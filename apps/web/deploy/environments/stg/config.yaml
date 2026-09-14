@@ -1,0 +1,5 @@
+# Non-sensitive runtime values. Kubernetes injects these via web-config.
+web:
+  config:
+    SITE_TITLE: "Mesh Lab \u00b7 STG"
+    UPSTREAM_TIMEOUT_MS: "6000"

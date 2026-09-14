@@ -1,0 +1,4 @@
+title: Metric collection
+description: Scrapes the merged application and Envoy metrics from every sidecar.
+operations: []
+steps: []

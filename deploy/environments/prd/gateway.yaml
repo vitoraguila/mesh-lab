@@ -1,0 +1,3 @@
+labels:
+  environment: prd
+replicaCount: 2

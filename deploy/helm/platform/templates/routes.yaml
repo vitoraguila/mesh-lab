@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: internal-api
+spec:
+  exportTo: ["."]
+  hosts:
+    - {{ .Values.global.gateway.name }}.{{ .Release.Namespace }}.svc.cluster.local
+  gateways: [internal-api]
+  http:
+    {{- range .Values.routes }}
+    - name: {{ .name }}
+      match:
+        - uri:
+            prefix: {{ .prefix | quote }}
+      delegate:
+        name: {{ .delegate }}
+        namespace: {{ $.Release.Namespace }}
+    {{- end }}

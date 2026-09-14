@@ -1,0 +1,13 @@
+{{- range .Values.environments }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ . }}
+  labels:
+    istio-injection: enabled
+    app.kubernetes.io/part-of: mesh-study
+    environment: {{ . }}
+  annotations:
+    helm.sh/resource-policy: keep
+{{- end }}

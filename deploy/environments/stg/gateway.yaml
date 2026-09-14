@@ -1,0 +1,3 @@
+labels:
+  environment: stg
+replicaCount: 1

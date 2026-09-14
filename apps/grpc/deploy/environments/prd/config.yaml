@@ -1,0 +1,5 @@
+# Non-sensitive runtime values. Kubernetes injects these via grpc-config.
+grpc:
+  config:
+    EVENTS_URL: "http://events.prd.svc.cluster.local:8080/ingest"
+    SERVICE_NAME: "grpc"

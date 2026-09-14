@@ -1,0 +1,14 @@
+# CUSTOM and ALLOW must both succeed, at the destination sidecar.
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: grpc-external-authorization
+spec:
+  selector:
+    matchLabels:
+      app: grpc
+  action: CUSTOM
+  provider:
+    name: study-authz-{{ .Values.global.environment }}
+  rules:
+    - {}

@@ -1,0 +1,42 @@
+global:
+  environment: stg
+  gateway:
+    name: internal-gateway
+    serviceAccount: internal-gateway
+    port: 80
+# Upstream broker image. This app has no source folder and is never built locally.
+image:
+  repository: rabbitmq
+  tag: 4.1.4-alpine
+  pullPolicy: IfNotPresent
+replicaCount: 1
+podAnnotations: {}
+nodeSelector: {}
+tolerations: []
+# Runtime variables are injected by Kubernetes, never by Docker build args.
+config: {}
+# Optional app-specific sensitive variables. Use ignored local files, not Git.
+secrets: {}
+# Use a separately managed Secret instead of the chart-created env Secret.
+existingEnvSecret: ""
+# Broker login used by every in-mesh producer and by the events consumer.
+credentials:
+  username: ""
+  password: ""
+service:
+  port: 5672
+# Topic exchange and the durable queue the events service consumes.
+broker:
+  exchange: mesh.events
+  queue: mesh.events
+  secretName: mesh-broker
+# Workload identities allowed to open an AMQP connection.
+producers: [catalog, orders, inventory, payments, reviews, graphql, grpc, authz]
+consumers: [events]
+resources:
+  requests: {cpu: 50m, memory: 192Mi}
+  limits: {cpu: 700m, memory: 512Mi}
+trafficPolicy:
+  connectionPool:
+    tcp:
+      maxConnections: 40

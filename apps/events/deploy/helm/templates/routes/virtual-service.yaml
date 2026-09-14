@@ -1,0 +1,20 @@
+# Delegated by deploy/helm/platform/templates/routes.yaml. Delegates omit hosts/gateways.
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: events-routes
+spec:
+  exportTo: ["."]
+  http:
+    - name: events
+      match:
+        - uri:
+            exact: {{ .Values.route.path | quote }}
+      {{- if ne .Values.route.timeout "0s" }}
+      timeout: {{ .Values.route.timeout }}
+      {{- end }}
+      route:
+        - destination:
+            host: events.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: {{ .Values.service.port }}

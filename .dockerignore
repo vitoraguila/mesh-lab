@@ -1,0 +1,10 @@
+.local
+.git
+**/node_modules
+**/.next
+**/*.tsbuildinfo
+**/__pycache__
+**/deploy
+deploy
+.env*
+**/.env*

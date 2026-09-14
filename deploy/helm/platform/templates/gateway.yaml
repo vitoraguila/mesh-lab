@@ -1,0 +1,17 @@
+apiVersion: networking.istio.io/v1
+kind: Gateway
+metadata:
+  name: internal-api
+spec:
+  selector:
+    istio: {{ .Values.global.gateway.selector }}
+    environment: {{ .Values.global.environment }}
+  servers:
+    - port:
+        number: {{ .Values.global.gateway.targetPort }}
+        name: https-internal
+        protocol: HTTPS
+      tls:
+        mode: ISTIO_MUTUAL
+      hosts:
+        - {{ .Values.global.gateway.name }}.{{ .Release.Namespace }}.svc.cluster.local

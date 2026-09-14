@@ -1,0 +1,15 @@
+name: internal-gateway
+labels:
+  istio: internal-gateway
+serviceAccount:
+  name: internal-gateway
+autoscaling:
+  enabled: false
+service:
+  type: ClusterIP
+  ports:
+    - {name: status-port, port: 15021, targetPort: 15021}
+    - {name: https-internal, port: 80, targetPort: 8443}
+resources:
+  requests: {cpu: 50m, memory: 64Mi}
+  limits: {cpu: 500m, memory: 128Mi}
