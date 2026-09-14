@@ -3,22 +3,13 @@ import { useCallback, useEffect, useState } from 'react'
 type Theme = 'dark' | 'light'
 const KEY = 'mesh-lab-theme'
 
-function readStored(): Theme | null {
-  try {
-    const v = localStorage.getItem(KEY)
-    return v === 'dark' || v === 'light' ? v : null
-  } catch {
-    return null
-  }
-}
-
 /**
- * The page is dark by default because the subject is a terminal-and-cluster
- * workflow, but light mode is a first-class mode, not an afterthought.
+ * Light is the default. Dark is a deliberate choice the visitor makes, and it
+ * is remembered; the system preference does not override what they picked.
  */
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(
-    () => (document.documentElement.dataset.theme as Theme | undefined) ?? 'dark',
+    () => (document.documentElement.dataset.theme as Theme | undefined) ?? 'light',
   )
 
   useEffect(() => {
@@ -30,17 +21,6 @@ export function useTheme() {
       /* private mode: the in-memory choice still applies for this visit */
     }
   }, [theme])
-
-  useEffect(() => {
-    if (readStored()) return
-    const mq = window.matchMedia('(prefers-color-scheme: light)')
-    const apply = () => {
-      if (!readStored()) setTheme(mq.matches ? 'light' : 'dark')
-    }
-    apply()
-    mq.addEventListener('change', apply)
-    return () => mq.removeEventListener('change', apply)
-  }, [])
 
   const toggle = useCallback(() => setTheme((t) => (t === 'dark' ? 'light' : 'dark')), [])
   return { theme, toggle }

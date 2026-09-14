@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion } from 'motion/react'
 import { ArrowClockwiseIcon, PaperPlaneTiltIcon } from '@phosphor-icons/react'
 import { Reveal } from './ui/Reveal'
+import { Hi } from '../lib/terms'
 import { EASE } from '../lib/motion'
 
 type IdentityKey = 'admin' | 'reader' | 'none' | 'invalid'
@@ -227,8 +228,9 @@ export function JourneySection() {
             Send a request and watch where it stops
           </h2>
           <p className="mt-5 max-w-[60ch] text-[16px] leading-relaxed text-muted">
-            Pick who is calling and what they are calling. The path, the checks and the verdict are the
-            ones this project really enforces.
+            <Hi>
+              {'Pick who is calling and what they are calling. The path, the checks and the verdict are the ones this project really enforces.'}
+            </Hi>
           </p>
         </Reveal>
 
@@ -435,7 +437,7 @@ export function JourneySection() {
                             {b.text}
                           </span>
                           <span className="mt-1 block max-w-[72ch] text-[13.5px] leading-relaxed text-muted">
-                            {b.detail}
+                            <Hi>{b.detail}</Hi>
                           </span>
                         </span>
                       </motion.li>

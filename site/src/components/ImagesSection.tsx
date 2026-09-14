@@ -2,11 +2,15 @@ import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Reveal } from './ui/Reveal'
+import { Hi } from '../lib/terms'
+import { TechIcon } from './ui/TechIcon'
+import type { TechKey } from '../lib/techIcons'
 
 gsap.registerPlugin(ScrollTrigger)
 
 type Panel = {
   n: string
+  mark: TechKey
   title: string
   body: string
   code: string[]
@@ -16,6 +20,7 @@ type Panel = {
 const PANELS: Panel[] = [
   {
     n: '01',
+    mark: 'go',
     title: 'Source, with no cluster in it',
     body: 'The catalog service is an ordinary Go module. It reads configuration from environment variables and serves HTTP on a port. It contains no authorization logic and knows nothing about Kubernetes.',
     code: ['apps/catalog/', '  main.go', '  go.mod', '  Dockerfile', '  deploy/'],
@@ -23,6 +28,7 @@ const PANELS: Panel[] = [
   },
   {
     n: '02',
+    mark: 'docker',
     title: 'A Dockerfile is a recipe, not a machine',
     body: 'Two stages. The first has a full Go toolchain and compiles a static binary. The second starts from scratch, an empty filesystem, and copies in that one file. The toolchain never ships.',
     code: [
@@ -38,6 +44,7 @@ const PANELS: Panel[] = [
   },
   {
     n: '03',
+    mark: 'docker',
     title: 'Build turns the recipe into an image',
     body: 'An image is a stack of read-only layers plus metadata: which binary to run, as which user, on which port. It is a file. It does not run, and nothing about staging or production is inside it.',
     code: ['make build APP=catalog', '', '=> [build 4/4] go build', '=> exporting layers', '=> naming to catalog:dev'],
@@ -45,6 +52,7 @@ const PANELS: Panel[] = [
   },
   {
     n: '04',
+    mark: 'kubernetes',
     title: 'The node needs the image locally',
     body: 'Normally a cluster pulls from a registry. Minikube can skip that: load the image straight into the node so the pod finds it without any push, pull, credentials or network.',
     code: ['minikube -p mesh-study image load catalog:dev', '', 'kubectl get pod -n stg -l app=catalog', 'catalog-7d9f4b8c6d-xk2p9   2/2   Running'],
@@ -52,6 +60,7 @@ const PANELS: Panel[] = [
   },
   {
     n: '05',
+    mark: 'helm',
     title: 'One image, both environments',
     body: 'The exact same catalog:dev is deployed to stg and to prd. Nothing environment-specific was baked in at build time, so promoting a version means pointing an environment at a tag, not rebuilding.',
     code: [
@@ -119,8 +128,9 @@ export function ImagesSection() {
             How your code becomes something a cluster can run
           </h2>
           <p className="mt-4 max-w-[58ch] text-[15.5px] leading-relaxed text-muted">
-            Five steps from a Go file on your disk to a container running under a scheduler. Nothing
-            here is Kubernetes yet.
+            <Hi>
+              {'Five steps from a Go file on your disk to a container running under a scheduler. Nothing here is Kubernetes yet.'}
+            </Hi>
           </p>
         </Reveal>
       </div>
@@ -139,11 +149,14 @@ export function ImagesSection() {
                 <div className="flex items-center gap-3">
                   <span className="font-mono text-[28px] leading-none font-medium text-accent">{p.n}</span>
                   <span className="h-px flex-1" style={{ background: 'var(--line)' }} />
+                  <TechIcon tech={p.mark} size={32} />
                 </div>
                 <h3 className="mt-5 text-[19px] leading-[1.2] font-medium tracking-[-0.015em] text-ink">
                   {p.title}
                 </h3>
-                <p className="mt-3 text-[14.5px] leading-relaxed text-muted">{p.body}</p>
+                <p className="mt-3 text-[14.5px] leading-relaxed text-muted">
+                  <Hi>{p.body}</Hi>
+                </p>
               </div>
 
               <div className="mt-6">
@@ -152,7 +165,9 @@ export function ImagesSection() {
                     <code>{p.code.join('\n')}</code>
                   </pre>
                 </div>
-                <p className="mt-3 text-[12.5px] leading-snug text-faint">{p.foot}</p>
+                <p className="mt-3 text-[12.5px] leading-snug text-faint">
+                  <Hi>{p.foot}</Hi>
+                </p>
               </div>
 
               <span className="sr-only">{`Step ${i + 1} of ${PANELS.length}`}</span>

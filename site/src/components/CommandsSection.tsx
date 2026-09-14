@@ -1,4 +1,5 @@
 import { Reveal } from './ui/Reveal'
+import { Hi } from '../lib/terms'
 
 type Group = { name: string; span: string; cols?: boolean; items: [string, string][] }
 
@@ -42,15 +43,16 @@ const GROUPS: Group[] = [
 
 export function CommandsSection() {
   return (
-    <section className="border-b border-line bg-sunken py-20 lg:py-28">
+    <section id="commands" className="border-b border-line bg-sunken py-20 lg:py-28">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <Reveal>
           <h2 className="max-w-[24ch] text-[clamp(1.9rem,4.2vw,3.1rem)] leading-[1.05] font-medium tracking-[-0.03em] text-ink">
             The commands worth remembering
           </h2>
           <p className="mt-5 max-w-[58ch] text-[16px] leading-relaxed text-muted">
-            Every target takes ENV=stg or ENV=prd, and most take APP=name to narrow the work to one
-            service.
+            <Hi>
+              {'Every target takes ENV=stg or ENV=prd, and most take APP=name to narrow the work to one service.'}
+            </Hi>
           </p>
         </Reveal>
 
@@ -60,7 +62,7 @@ export function CommandsSection() {
               key={g.name}
               as="article"
               delay={gi * 0.07}
-              className={`${g.span} rounded-2xl border border-line bg-raised p-6 lg:p-8`}
+              className={`${g.span} min-w-0 rounded-2xl border border-line bg-raised p-6 lg:p-8`}
             >
               <h3 className="font-mono text-[11px] tracking-[0.16em] text-faint uppercase">{g.name}</h3>
               <dl

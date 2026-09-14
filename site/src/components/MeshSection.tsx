@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 import { LockKeyIcon, LockKeyOpenIcon } from '@phosphor-icons/react'
 import { Reveal } from './ui/Reveal'
+import { Hi } from '../lib/terms'
+import { TechGlyph, TechIcon } from './ui/TechIcon'
 import { EASE } from '../lib/motion'
 
 const RESOURCES = [
@@ -56,10 +58,11 @@ function SidecarDiagram({ injected }: { injected: boolean }) {
     <svg viewBox="0 0 920 300" className="h-auto w-full" role="img" aria-label={injected ? 'With the sidecar injected, the gateway connects to Envoy over mutual TLS and Envoy forwards to the application on localhost.' : 'Without the sidecar, the gateway connects straight to the application in plain HTTP.'}>
       {/* gateway */}
       <rect x="20" y="105" width="150" height="90" rx="12" fill="var(--raised)" stroke="var(--line-strong)" />
-      <text x="95" y="145" textAnchor="middle" className="font-mono" fontSize="13" fill="var(--ink)">
+      <TechGlyph tech="istio" x={84} y={116} size={22} />
+      <text x="95" y="152" textAnchor="middle" className="font-mono" fontSize="13" fill="var(--ink)">
         gateway
       </text>
-      <text x="95" y="165" textAnchor="middle" className="font-mono" fontSize="10" fill="var(--faint)">
+      <text x="95" y="170" textAnchor="middle" className="font-mono" fontSize="10" fill="var(--faint)">
         caller
       </text>
 
@@ -112,6 +115,7 @@ function SidecarDiagram({ injected }: { injected: boolean }) {
       {/* envoy sidecar */}
       <motion.g animate={{ opacity: injected ? 1 : 0, x: injected ? 0 : -28 }} transition={t}>
         <rect x="410" y="105" width="200" height="90" rx="10" fill="var(--accent-soft)" stroke="var(--accent)" strokeWidth="1.4" />
+        <TechGlyph tech="envoyproxy" x={424} y={116} size={22} />
         <text x="510" y="140" textAnchor="middle" className="font-mono" fontSize="13" fill="var(--ink)">
           istio-proxy
         </text>
@@ -127,6 +131,7 @@ function SidecarDiagram({ injected }: { injected: boolean }) {
       {/* application container */}
       <motion.g animate={{ x: injected ? 124 : 0 }} transition={t}>
         <rect x="560" y="105" width="200" height="90" rx="10" fill="var(--raised)" stroke="var(--line-strong)" />
+        <TechGlyph tech="go" x={574} y={116} size={22} />
         <text x="660" y="140" textAnchor="middle" className="font-mono" fontSize="13" fill="var(--ink)">
           catalog
         </text>
@@ -157,12 +162,17 @@ export function MeshSection() {
     <section id="mesh" className="border-b border-line bg-sunken py-20 lg:py-28">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <Reveal>
+          <div className="mb-5 flex items-center gap-4">
+            <TechIcon tech="istio" size={40} />
+            <TechIcon tech="envoyproxy" size={40} />
+          </div>
           <h2 className="max-w-[20ch] text-[clamp(1.9rem,4.2vw,3.1rem)] leading-[1.05] font-medium tracking-[-0.03em] text-ink">
             Istio adds a proxy you did not write
           </h2>
           <p className="mt-5 max-w-[60ch] text-[16px] leading-relaxed text-muted">
-            Envoy is the proxy. Istio is the control plane that configures every copy of it. Flip the
-            switch to see what injection actually changes about the pod.
+            <Hi>
+              {'Envoy is the proxy. Istio is the control plane that configures every copy of it. Flip the switch to see what injection actually changes about the pod.'}
+            </Hi>
           </p>
         </Reveal>
 
@@ -198,10 +208,9 @@ export function MeshSection() {
           <SidecarDiagram injected={injected} />
 
           <p className="mt-6 max-w-[70ch] text-[14.5px] leading-relaxed text-muted">
-            Nothing in the Go source changed. The pod template gained a container, and with it every
-            inbound and outbound byte now passes through something the platform controls: encryption,
-            identity, retries, timeouts, metrics and authorization, all applied without a line of
-            application code.
+            <Hi>
+              {'Nothing in the Go source changed. The pod template gained a container, and with it every inbound and outbound byte now passes through something the platform controls: encryption, identity, retries, timeouts, metrics and authorization, all applied without a line of application code.'}
+            </Hi>
           </p>
         </Reveal>
 
@@ -222,10 +231,15 @@ export function MeshSection() {
                 key={r.kind}
                 as="article"
                 delay={(i % 2) * 0.08}
-                className="flex flex-col rounded-2xl border border-line bg-raised p-6"
+                className="flex min-w-0 flex-col rounded-2xl border border-line bg-raised p-6"
               >
-                <h4 className="font-mono text-[13px] font-medium text-accent">{r.kind}</h4>
-                <p className="mt-2.5 text-[14.5px] leading-relaxed text-muted">{r.job}</p>
+                <h4 className="flex items-center gap-2 font-mono text-[13px] font-medium text-accent">
+                  <TechIcon tech="istio" size={20} label={false} />
+                  {r.kind}
+                </h4>
+                <p className="mt-2.5 text-[14.5px] leading-relaxed text-muted">
+                  <Hi>{r.job}</Hi>
+                </p>
                 <div className="mt-5 flex-1 overflow-x-auto rounded-xl border border-line bg-sunken p-4">
                   <pre className="font-mono text-[11.5px] leading-[1.8] text-ink">
                     <code>{r.yaml}</code>
@@ -237,8 +251,9 @@ export function MeshSection() {
 
           <Reveal delay={0.1}>
             <p className="mt-8 max-w-[70ch] border-l-2 pl-5 text-[15.5px] leading-relaxed text-ink" style={{ borderColor: 'var(--accent)' }}>
-              The namespace also carries a default-deny policy and STRICT mutual TLS. A service that
-              nobody wrote a rule for is unreachable, which is the opposite of the usual default.
+              <Hi>
+                {'The namespace also carries a default-deny policy and STRICT mutual TLS. A service that nobody wrote a rule for is unreachable, which is the opposite of the usual default.'}
+              </Hi>
             </p>
           </Reveal>
         </div>

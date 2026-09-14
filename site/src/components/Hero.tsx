@@ -3,7 +3,7 @@ import { ArrowDownIcon, TerminalWindowIcon } from '@phosphor-icons/react'
 import { HeroTopology } from './HeroTopology'
 import { EASE } from '../lib/motion'
 
-const WORDS = ['One request.', 'Every layer', 'it crosses.']
+const LINES = ['How a microservice', 'architecture moves data.']
 
 export function Hero() {
   const reduce = useReducedMotion()
@@ -22,9 +22,9 @@ export function Hero() {
       <div className="relative mx-auto grid w-full max-w-[1400px] grid-cols-1 items-center gap-14 px-5 md:px-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
         <div>
           <h1 className="text-[clamp(2.6rem,7vw,4.6rem)] leading-[1.03] font-medium tracking-[-0.035em] text-ink">
-            {WORDS.map((word, i) => (
+            {LINES.map((line, i) => (
               <motion.span
-                key={word}
+                key={line}
                 className="block"
                 initial={reduce ? false : { opacity: 0, y: 34 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -32,10 +32,10 @@ export function Hero() {
               >
                 {i === 1 ? (
                   <>
-                    Every <span className="text-accent">layer</span>
+                    architecture <span className="text-accent">moves data.</span>
                   </>
                 ) : (
-                  word
+                  line
                 )}
               </motion.span>
             ))}
@@ -47,8 +47,8 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 0.34, ease: EASE }}
             className="mt-7 max-w-[52ch] text-[17px] leading-relaxed text-muted md:text-[18px]"
           >
-            Containers, pods, nodes, Helm, Istio and Envoy, explained by following one call through a
-            cluster you can run tonight.
+            One runnable Kubernetes case study: how a request is routed and authorized, how events
+            reach a broker, how metrics are collected.
           </motion.p>
 
           <motion.div
@@ -58,11 +58,11 @@ export function Hero() {
             className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center"
           >
             <a
-              href="#layers"
+              href="#overview"
               className="inline-flex items-center justify-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-medium whitespace-nowrap text-on-accent transition-colors duration-200 hover:bg-accent-quiet active:translate-y-px"
               style={{ boxShadow: '0 14px 40px -18px var(--glow)' }}
             >
-              Start the walkthrough
+              See the architecture
               <ArrowDownIcon size={15} weight="bold" />
             </a>
             <a

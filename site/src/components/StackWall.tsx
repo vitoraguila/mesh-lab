@@ -1,34 +1,35 @@
 import { Reveal } from './ui/Reveal'
+import { TechIcon } from './ui/TechIcon'
+import type { TechKey } from '../lib/techIcons'
 
-const SLUGS = [
-  ['kubernetes', 'Kubernetes'],
-  ['istio', 'Istio'],
-  ['envoyproxy', 'Envoy'],
-  ['docker', 'Docker'],
-  ['helm', 'Helm'],
-  ['go', 'Go'],
-  ['nodedotjs', 'Node.js'],
-  ['python', 'Python'],
-  ['nextdotjs', 'Next.js'],
-  ['graphql', 'GraphQL'],
-  ['rabbitmq', 'RabbitMQ'],
-  ['prometheus', 'Prometheus'],
-  ['grafana', 'Grafana'],
-  ['typescript', 'TypeScript'],
-] as const
+const STACK: TechKey[] = [
+  'kubernetes',
+  'istio',
+  'envoyproxy',
+  'docker',
+  'helm',
+  'go',
+  'nodedotjs',
+  'python',
+  'nextdotjs',
+  'react',
+  'typescript',
+  'graphql',
+  'rabbitmq',
+  'prometheus',
+  'grafana',
+]
 
-function Row() {
+function Row({ hidden }: { hidden?: boolean }) {
   return (
-    <div className="flex shrink-0 items-center gap-14 pr-14">
-      {SLUGS.map(([slug, name]) => (
-        <img
-          key={slug}
-          src={`https://cdn.simpleicons.org/${slug}/ffffff`}
-          alt={name}
-          loading="lazy"
-          width={30}
-          height={30}
-          className="logo-img h-[30px] w-auto opacity-45 transition-opacity duration-300 hover:opacity-100"
+    <div className="flex shrink-0 items-center gap-14 pr-14" aria-hidden={hidden}>
+      {STACK.map((t) => (
+        <TechIcon
+          key={t}
+          tech={t}
+          size={46}
+          label={!hidden}
+          className="shrink-0 transition-transform duration-300 hover:scale-110"
         />
       ))}
     </div>
@@ -42,11 +43,10 @@ export function StackWall() {
         <div className="mask-fade-x flex overflow-hidden">
           <div className="animate-track flex min-w-max">
             <Row />
-            <Row />
+            <Row hidden />
           </div>
         </div>
       </Reveal>
-      <style>{`[data-theme='light'] .logo-img { filter: invert(1); }`}</style>
     </section>
   )
 }

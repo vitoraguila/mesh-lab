@@ -21,6 +21,7 @@
   --accent: #ff5c29;
   --accent-quiet: #ff7a4f;
   --accent-soft: rgb(255 92 41 / 0.13);
+  --accent-wash: rgb(255 92 41 / 0.06);
   --on-accent: #150601;
   --ok: #5ee08a;
   --deny: #ff6b6b;
@@ -40,6 +41,7 @@
   --accent: #c2380a;
   --accent-quiet: #a52f08;
   --accent-soft: rgb(194 56 10 / 0.10);
+  --accent-wash: rgb(194 56 10 / 0.05);
   --on-accent: #ffffff;
   --ok: #127a3e;
   --deny: #b8202a;
@@ -59,6 +61,7 @@
   --color-accent: var(--accent);
   --color-accent-quiet: var(--accent-quiet);
   --color-accent-soft: var(--accent-soft);
+  --color-accent-wash: var(--accent-wash);
   --color-on-accent: var(--on-accent);
   --color-ok: var(--ok);
   --color-deny: var(--deny);
@@ -75,6 +78,12 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+  }
+
+  /* Deep links and menu jumps must clear the fixed bar. */
+  section[id],
+  [id='top'] {
+    scroll-margin-top: 84px;
   }
 
   body {
@@ -189,4 +198,24 @@
 
 .animate-soft-pulse {
   animation: soft-pulse 2.4s ease-in-out infinite;
+}
+
+/* ---------------------------------------------------------------
+   Brand marks keep their own colour. Three of them disappear against
+   one of the two grounds, so those get a ground-specific override.
+   --------------------------------------------------------------- */
+[data-theme='dark'] .tech-mark[data-tech='nextdotjs'] {
+  color: #ffffff;
+}
+
+[data-theme='dark'] .tech-mark[data-tech='helm'] {
+  color: #7681ec;
+}
+
+[data-theme='dark'] .tech-mark[data-tech='apachekafka'] {
+  color: #ffffff;
+}
+
+[data-theme='light'] .tech-mark[data-tech='react'] {
+  color: #0b8fbf;
 }

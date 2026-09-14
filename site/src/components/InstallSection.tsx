@@ -1,5 +1,7 @@
 import { Reveal } from './ui/Reveal'
+import { Hi } from '../lib/terms'
 import { Terminal } from './ui/Terminal'
+import { StudioPreview } from './StudioPreview'
 import type { Line } from './ui/Terminal'
 
 type Step = { title: string; body: string; title2?: string; lines: Line[] }
@@ -87,15 +89,18 @@ export function InstallSection() {
             Run it yourself
           </p>
           <h2 className="max-w-[20ch] text-[clamp(1.9rem,4.2vw,3.1rem)] leading-[1.05] font-medium tracking-[-0.03em] text-ink">
-            Seven commands to a cluster on your desk
+            Running the whole thing locally
           </h2>
           <p className="mt-5 max-w-[58ch] text-[16px] leading-relaxed text-muted">
-            Nothing here touches a remote cluster. stg and prd are two namespaces in one local
-            Minikube profile called mesh-study.
+            <Hi>
+              {'Nothing here touches a remote cluster. stg and prd are two namespaces in one local Minikube profile called mesh-study.'}
+            </Hi>
           </p>
         </Reveal>
 
-        <ol className="mt-14 flex flex-col gap-12 lg:gap-16">
+        <StudioPreview />
+
+        <ol className="mt-16 flex flex-col gap-12 lg:gap-16">
           {STEPS.map((s, i) => (
             <Reveal as="li" key={s.title} amount={0.15}>
               <div className="grid grid-cols-[auto_1fr] gap-4 md:gap-6">
@@ -106,7 +111,9 @@ export function InstallSection() {
                   <h3 className="text-[19px] leading-[1.25] font-medium tracking-[-0.015em] text-ink md:text-[21px]">
                     {s.title}
                   </h3>
-                  <p className="mt-3 max-w-[62ch] text-[15px] leading-relaxed text-muted">{s.body}</p>
+                  <p className="mt-3 max-w-[62ch] text-[15px] leading-relaxed text-muted">
+                    <Hi>{s.body}</Hi>
+                  </p>
                   <Terminal className="mt-6" lines={s.lines} />
                 </div>
               </div>

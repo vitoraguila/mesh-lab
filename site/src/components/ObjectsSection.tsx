@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { Reveal } from './ui/Reveal'
+import { PodLocalhost, ServiceResolve } from './ui/MiniDiagrams'
+import { Hi } from '../lib/terms'
+import { TechIcon } from './ui/TechIcon'
+import type { TechKey } from '../lib/techIcons'
 import { EASE } from '../lib/motion'
 
 /** Reconciliation, drawn: a pod dies, the ReplicaSet makes another one. */
@@ -97,12 +101,13 @@ function NamespaceSplit() {
   )
 }
 
-type Card = { title: string; kind: string; body: string; span: string; extra?: 'replicas' | 'yaml' | 'ns' }
+type Card = { title: string; kind: string; mark: TechKey; body: string; span: string; extra?: 'replicas' | 'yaml' | 'ns' | 'svc' | 'pod' }
 
 const CARDS: Card[] = [
   {
     title: 'Deployment',
     kind: 'apps/v1',
+    mark: 'kubernetes',
     body: 'You never start a pod. You declare how many should exist, and a controller keeps reality matching that number. Kill one and another appears with a different name.',
     span: 'lg:col-span-8',
     extra: 'replicas',
@@ -110,18 +115,23 @@ const CARDS: Card[] = [
   {
     title: 'Pod',
     kind: 'v1',
+    mark: 'kubernetes',
     body: 'Disposable by design. It has a generated name, a cluster-internal IP that changes on every rollout, and no identity worth remembering. Never address a pod directly.',
     span: 'lg:col-span-4',
+    extra: 'pod',
   },
   {
     title: 'Service',
     kind: 'v1',
+    mark: 'kubernetes',
     body: 'The stable name in front of those moving IPs. catalog.stg.svc.cluster.local resolves to whichever pods are ready right now, and keeps resolving while they are replaced.',
     span: 'lg:col-span-4',
+    extra: 'svc',
   },
   {
     title: 'ConfigMap and Secret',
     kind: 'v1',
+    mark: 'kubernetes',
     body: 'Where the environment difference lives. The chart hashes both into a pod annotation, so editing a value rolls exactly that one Deployment, with no image rebuild.',
     span: 'lg:col-span-8',
     extra: 'yaml',
@@ -129,6 +139,7 @@ const CARDS: Card[] = [
   {
     title: 'Namespace',
     kind: 'v1',
+    mark: 'kubernetes',
     body: 'stg and prd are the same cluster with different names, different replica counts, different credentials, and an authorization policy that refuses the other side outright.',
     span: 'lg:col-span-6',
     extra: 'ns',
@@ -136,6 +147,7 @@ const CARDS: Card[] = [
   {
     title: 'Helm chart',
     kind: 'helm.sh/v3',
+    mark: 'helm',
     body: 'Templates plus values plus a release name. One study release per namespace composes every application chart, and upgrading it rolls only the workloads whose pod template actually changed.',
     span: 'lg:col-span-6',
   },
@@ -150,8 +162,9 @@ export function ObjectsSection() {
             Six objects carry almost everything
           </h2>
           <p className="mt-5 max-w-[58ch] text-[16px] leading-relaxed text-muted">
-            Kubernetes has hundreds of resource kinds. Running this whole case study needs six, and
-            every one of them is a YAML file you can read.
+            <Hi>
+              {'Kubernetes has hundreds of resource kinds. Running this whole case study needs six, and every one of them is a YAML file you can read.'}
+            </Hi>
           </p>
         </Reveal>
 
@@ -161,16 +174,23 @@ export function ObjectsSection() {
               key={c.title}
               as="article"
               delay={(i % 2) * 0.08}
-              className={`${c.span} flex flex-col rounded-2xl border border-line bg-raised p-6 lg:p-8`}
+              className={`${c.span} flex min-w-0 flex-col rounded-2xl border border-line bg-raised p-6 lg:p-8`}
             >
-              <div className="flex items-baseline justify-between gap-4">
-                <h3 className="text-[19px] font-medium tracking-[-0.015em] text-ink">{c.title}</h3>
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-2.5">
+                  <TechIcon tech={c.mark} size={28} />
+                  <h3 className="text-[19px] font-medium tracking-[-0.015em] text-ink">{c.title}</h3>
+                </div>
                 <code className="font-mono text-[10.5px] text-faint">{c.kind}</code>
               </div>
-              <p className="mt-3 max-w-[58ch] text-[14.5px] leading-relaxed text-muted">{c.body}</p>
+              <p className="mt-3 max-w-[58ch] text-[14.5px] leading-relaxed text-muted">
+                <Hi>{c.body}</Hi>
+              </p>
 
               {c.extra === 'replicas' && <ReplicaLoop />}
               {c.extra === 'ns' && <NamespaceSplit />}
+              {c.extra === 'svc' && <ServiceResolve />}
+              {c.extra === 'pod' && <PodLocalhost />}
               {c.extra === 'yaml' && (
                 <div className="mt-6 overflow-x-auto rounded-xl border border-line bg-sunken p-4">
                   <pre className="font-mono text-[11.5px] leading-[1.8] text-ink">

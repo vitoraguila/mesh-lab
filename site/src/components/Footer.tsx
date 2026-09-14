@@ -1,5 +1,6 @@
 import { ArrowUpRightIcon } from '@phosphor-icons/react'
 import { Reveal } from './ui/Reveal'
+import { Hi } from '../lib/terms'
 
 const READING = [
   ['Istio delegation', 'https://istio.io/latest/docs/reference/config/networking/virtual-service/#Delegate'],
@@ -18,12 +19,12 @@ export function Footer() {
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
             <div>
               <h2 className="max-w-[16ch] text-[clamp(1.8rem,4vw,2.8rem)] leading-[1.08] font-medium tracking-[-0.03em] text-ink">
-                The fastest way to understand it is to break it
+                Most of it only makes sense once you break it
               </h2>
               <p className="mt-5 max-w-[52ch] text-[15.5px] leading-relaxed text-muted">
-                Delete a pod and watch it come back. Remove the CUSTOM policy and watch a reader reach
-                orders. Stop authz and watch every service answer 503. The cluster is local, and
-                nothing you do to it costs anything.
+                <Hi>
+                  {'Delete a pod and watch it come back. Remove the CUSTOM policy and watch a reader reach orders. Stop authz and watch every service answer 503. The cluster is local, and nothing you do to it costs anything.'}
+                </Hi>
               </p>
               <a
                 href="#install"

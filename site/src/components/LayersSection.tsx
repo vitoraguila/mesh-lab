@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { TechGlyph } from './ui/TechIcon'
+import { Hi } from '../lib/terms'
+import type { TechKey } from '../lib/techIcons'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -65,12 +68,12 @@ const STEPS: Step[] = [
 ]
 
 /** Nested frames in a 920x560 logical canvas. Each frame contains the next. */
-const FRAMES = [
+const FRAMES: { x: number; y: number; w: number; h: number; label: string; tech?: TechKey }[] = [
   { x: 0, y: 0, w: 920, h: 560, label: 'your machine' },
-  { x: 46, y: 54, w: 828, h: 462, label: 'docker engine' },
-  { x: 92, y: 112, w: 736, h: 366, label: 'node / mesh-study' },
-  { x: 138, y: 172, w: 644, h: 254, label: 'namespace / stg' },
-  { x: 190, y: 226, w: 540, h: 146, label: 'pod / catalog-7d9f4b8c6d-xk2p9' },
+  { x: 46, y: 54, w: 828, h: 462, label: 'docker engine', tech: 'docker' },
+  { x: 92, y: 112, w: 736, h: 366, label: 'node / mesh-study', tech: 'kubernetes' },
+  { x: 138, y: 172, w: 644, h: 254, label: 'namespace / stg', tech: 'kubernetes' },
+  { x: 190, y: 226, w: 540, h: 146, label: 'pod / catalog-7d9f4b8c6d-xk2p9', tech: 'kubernetes' },
 ]
 
 export function LayersSection() {
@@ -144,7 +147,7 @@ export function LayersSection() {
                   {active.title}
                 </h3>
                 <p className="mt-3.5 max-w-[54ch] text-[14.5px] leading-relaxed text-muted md:text-[15.5px]">
-                  {active.body}
+                  <Hi>{active.body}</Hi>
                 </p>
                 <div className="mt-5 rounded-2xl border border-line bg-sunken p-3.5 md:p-4">
                   <div className="overflow-x-auto">
@@ -174,7 +177,7 @@ export function LayersSection() {
                       <g
                         key={f.label}
                         style={{
-                          opacity: seen ? 1 : 0.16,
+                          opacity: seen ? 1 : 0.42,
                           transition: 'opacity 600ms cubic-bezier(0.16,1,0.3,1)',
                         }}
                       >
@@ -184,14 +187,17 @@ export function LayersSection() {
                           width={f.w - 1}
                           height={f.h - 1}
                           rx={i === 4 ? 14 : 16}
-                          fill={on ? 'var(--accent-soft)' : 'transparent'}
+                          fill={on ? 'var(--accent-wash)' : 'transparent'}
                           stroke={on ? 'var(--accent)' : 'var(--line-strong)'}
                           strokeWidth={on ? 1.8 : 1}
                           strokeDasharray={i === 4 ? '7 5' : undefined}
                           style={{ transition: 'all 600ms cubic-bezier(0.16,1,0.3,1)' }}
                         />
+                        {f.tech && (
+                          <TechGlyph tech={f.tech} x={f.x + 16} y={f.y + 12} size={20} />
+                        )}
                         <text
-                          x={f.x + 16}
+                          x={f.x + (f.tech ? 44 : 16)}
                           y={f.y + 26}
                           className="font-mono"
                           fontSize="13"
@@ -206,15 +212,15 @@ export function LayersSection() {
 
                   {/* The two containers inside the pod. */}
                   {[
-                    { x: 212, y: 268, label: 'istio-proxy', sub: 'Envoy, injected' },
-                    { x: 470, y: 268, label: 'catalog', sub: 'your Go binary' },
+                    { x: 212, y: 268, label: 'istio-proxy', sub: 'Envoy, injected', tech: 'envoyproxy' as TechKey },
+                    { x: 470, y: 268, label: 'catalog', sub: 'your Go binary', tech: 'go' as TechKey },
                   ].map((c, i) => {
                     const on = step === 5
                     return (
                       <g
                         key={c.label}
                         style={{
-                          opacity: step >= 5 ? 1 : 0.1,
+                          opacity: step >= 5 ? 1 : 0.42,
                           transition: `opacity 600ms cubic-bezier(0.16,1,0.3,1) ${i * 90}ms`,
                         }}
                       >
@@ -229,8 +235,9 @@ export function LayersSection() {
                           strokeWidth={on ? 1.6 : 1}
                           style={{ transition: 'all 600ms cubic-bezier(0.16,1,0.3,1)' }}
                         />
+                        <TechGlyph tech={c.tech} x={c.x + 16} y={c.y + 17} size={24} />
                         <text
-                          x={c.x + 16}
+                          x={c.x + 48}
                           y={c.y + 33}
                           className="font-mono"
                           fontSize="14"
@@ -240,7 +247,7 @@ export function LayersSection() {
                           {c.label}
                         </text>
                         <text
-                          x={c.x + 16}
+                          x={c.x + 48}
                           y={c.y + 55}
                           className="font-mono"
                           fontSize="11.5"

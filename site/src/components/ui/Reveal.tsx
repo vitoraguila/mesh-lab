@@ -7,7 +7,7 @@ type Props = {
   delay?: number
   y?: number
   className?: string
-  as?: 'div' | 'section' | 'li' | 'header' | 'article'
+  as?: 'div' | 'section' | 'li' | 'header' | 'article' | 'figure'
   amount?: number
 }
 

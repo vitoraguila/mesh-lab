@@ -1,16 +1,18 @@
 import { motion, useReducedMotion } from 'motion/react'
 import { EASE } from '../lib/motion'
+import { TechGlyph } from './ui/TechIcon'
+import type { TechKey } from '../lib/techIcons'
 
-type Box = { x: number; y: number; w: number; h: number; label: string; sub?: string; lang?: string }
+type Box = { x: number; y: number; w: number; h: number; label: string; sub?: string; tech?: TechKey }
 
 const BOXES: Box[] = [
-  { x: 130, y: 10, w: 160, h: 46, label: 'browser', sub: 'localhost:3000' },
-  { x: 130, y: 110, w: 160, h: 56, label: 'web', sub: 'Next.js pod', lang: 'TS' },
-  { x: 130, y: 220, w: 160, h: 46, label: 'gateway', sub: 'Istio ingress' },
-  { x: 16, y: 330, w: 122, h: 76, label: 'catalog', sub: 'REST', lang: 'GO' },
-  { x: 149, y: 330, w: 122, h: 76, label: 'reviews', sub: 'REST', lang: 'PY' },
-  { x: 282, y: 330, w: 122, h: 76, label: 'payments', sub: 'REST', lang: 'JS' },
-  { x: 130, y: 462, w: 160, h: 46, label: 'authz', sub: 'shared policy', lang: 'GO' },
+  { x: 130, y: 10, w: 160, h: 46, label: 'browser', sub: 'localhost:3000', tech: 'googlechrome' },
+  { x: 130, y: 110, w: 160, h: 56, label: 'web', sub: 'Next.js pod', tech: 'nextdotjs' },
+  { x: 130, y: 220, w: 160, h: 46, label: 'gateway', sub: 'Istio ingress', tech: 'istio' },
+  { x: 16, y: 330, w: 122, h: 76, label: 'catalog', sub: 'REST', tech: 'go' },
+  { x: 149, y: 330, w: 122, h: 76, label: 'reviews', sub: 'REST', tech: 'python' },
+  { x: 282, y: 330, w: 122, h: 76, label: 'payments', sub: 'REST', tech: 'nodedotjs' },
+  { x: 130, y: 462, w: 160, h: 46, label: 'authz', sub: 'shared policy', tech: 'go' },
 ]
 
 const EDGES = [
@@ -97,17 +99,8 @@ export function HeroTopology() {
               {b.sub}
             </text>
           )}
-          {b.lang && (
-            <text
-              x={b.x + b.w - 12}
-              y={b.y + 22}
-              textAnchor="end"
-              className="font-mono"
-              fontSize="9.5"
-              fill="var(--accent)"
-            >
-              {b.lang}
-            </text>
+          {b.tech && (
+            <TechGlyph tech={b.tech} x={b.x + b.w - 30} y={b.y + 9} size={19} />
           )}
           {/* Every workload pod carries an Envoy sidecar. It is drawn, not implied. */}
           {b.h > 50 && (
