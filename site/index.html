@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mesh Lab - How a Kubernetes microservice mesh actually works</title>
+    <meta
+      name="description"
+      content="A scrollable, animated walkthrough of containers, pods, nodes, clusters, Helm, Istio and Envoy, built from a real runnable local Kubernetes case study."
+    />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#0B0C0E" />
+    <meta property="og:title" content="Mesh Lab - How a Kubernetes microservice mesh actually works" />
+    <meta
+      property="og:description"
+      content="Containers, pods, nodes, clusters, Helm, Istio and Envoy, explained by walking one real request through a real local cluster."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="preconnect" href="https://cdn.simpleicons.org" crossorigin />
+    <script>
+      // Set the stored theme before first paint so the page never flashes.
+      try {
+        var t = localStorage.getItem('mesh-lab-theme')
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
