@@ -114,8 +114,9 @@ export function LayersSection() {
   const active = STEPS[step]
 
   return (
-    <section id="layers" className="relative border-b border-line">
-      <div ref={wrapRef} className="min-h-[100dvh] overflow-hidden bg-canvas">
+    <section id="layers"
+      style={{ ["--tint" as string]: "#7048e8" }} className="relative border-b border-line tinted-soft">
+      <div ref={wrapRef} className="min-h-[100dvh] overflow-hidden tinted-soft">
         <div className="mx-auto flex min-h-[100dvh] max-w-[1400px] flex-col justify-center px-5 py-14 md:px-10 md:py-20">
           <header className="mb-6 lg:mb-10">
             <p className="mb-2.5 font-mono text-[11px] tracking-[0.18em] text-accent uppercase">

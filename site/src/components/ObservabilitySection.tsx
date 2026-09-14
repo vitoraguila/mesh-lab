@@ -127,7 +127,8 @@ function ScrapeDiagram() {
 
 export function ObservabilitySection() {
   return (
-    <section id="signals" className="border-b border-line bg-sunken py-20 lg:py-28">
+    <section id="signals"
+      style={{ ["--tint" as string]: "#0ca678" }} className="border-b border-line tinted-soft py-20 lg:py-28">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <Reveal>
           <div className="mb-5 flex items-center gap-4">

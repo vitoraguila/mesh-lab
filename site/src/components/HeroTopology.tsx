@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 import { EASE } from '../lib/motion'
 import { TechGlyph } from './ui/TechIcon'
@@ -31,9 +32,30 @@ const EDGES = [
 const PATH_X = [210, 210, 210, 77, 210, 77, 210, 210, 210]
 const PATH_Y = [40, 138, 243, 368, 485, 368, 243, 138, 40]
 const TIMES = [0, 0.11, 0.24, 0.38, 0.52, 0.64, 0.76, 0.88, 1]
+const LOOP = 7.5
+/** Which box each waypoint lands on, so the arrival can light it up. */
+const STOPS = ['browser', 'web', 'gateway', 'catalog', 'authz', 'catalog', 'gateway', 'web', 'browser']
 
 export function HeroTopology() {
   const reduce = useReducedMotion()
+  const [hit, setHit] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (reduce) return
+    const started = performance.now()
+    const id = window.setInterval(() => {
+      const t = (((performance.now() - started) / 1000) % LOOP) / LOOP
+      let near: string | null = null
+      for (let i = 0; i < TIMES.length; i++) {
+        if (Math.abs(t - TIMES[i]) < 0.035) {
+          near = STOPS[i]
+          break
+        }
+      }
+      setHit((cur) => (cur === near ? cur : near))
+    }, 70)
+    return () => window.clearInterval(id)
+  }, [reduce])
 
   return (
     <svg
@@ -47,6 +69,11 @@ export function HeroTopology() {
           <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.5" />
           <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
         </radialGradient>
+        <linearGradient id="hero-hit" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="var(--sweep-1)" />
+          <stop offset="45%" stopColor="var(--sweep-2)" />
+          <stop offset="100%" stopColor="var(--sweep-4)" />
+        </linearGradient>
       </defs>
 
       {EDGES.map((d, i) => (
@@ -81,9 +108,33 @@ export function HeroTopology() {
             height={b.h}
             rx="10"
             fill="var(--raised)"
-            stroke="var(--line-strong)"
-            strokeWidth="1"
+            stroke={hit === b.label ? 'url(#hero-hit)' : 'var(--line-strong)'}
+            strokeWidth={hit === b.label ? 1.6 : 1}
+            style={{
+              transition: 'stroke-width 220ms ease-out',
+              filter: hit === b.label ? 'drop-shadow(0 0 12px var(--glow))' : undefined,
+            }}
           />
+          {/* the arrival runs a bright segment of the sweep once around the box */}
+          {hit === b.label && !reduce && (
+            <motion.rect
+              key={`trace-${b.label}`}
+              x={b.x}
+              y={b.y}
+              width={b.w}
+              height={b.h}
+              rx="10"
+              fill="none"
+              stroke="url(#hero-hit)"
+              strokeWidth="2.6"
+              strokeLinecap="round"
+              pathLength={1}
+              strokeDasharray="0.26 0.74"
+              initial={{ strokeDashoffset: 0.26, opacity: 0 }}
+              animate={{ strokeDashoffset: [0.26, -0.74], opacity: [0, 1, 1, 0] }}
+              transition={{ duration: 1.25, ease: 'linear', times: undefined }}
+            />
+          )}
           <text
             x={b.x + 12}
             y={b.y + 22}

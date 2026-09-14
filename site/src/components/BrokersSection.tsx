@@ -4,6 +4,7 @@ import { LightningIcon, StackPlusIcon } from '@phosphor-icons/react'
 import { Reveal } from './ui/Reveal'
 import { TechIcon } from './ui/TechIcon'
 import { EventFlow } from './EventFlow'
+import { CurveBand, SweepFade } from './ui/Curve'
 import { QueueVsLog } from './ui/MiniDiagrams'
 import { Disclosure } from './ui/Disclosure'
 import { Hi } from '../lib/terms'
@@ -149,10 +150,10 @@ function FlowCompare() {
                   </text>
                 </g>
               ))}
-              <text x="640" y="222" className="font-mono" fontSize="11" fill="var(--deny)">
+              <text x="964" y="222" textAnchor="end" className="font-mono" fontSize="11" fill="var(--deny)">
                 one consumer down, and the write that started all this fails too
               </text>
-              <text x="640" y="118" className="font-mono" fontSize="11" fill="var(--muted)">
+              <text x="964" y="118" textAnchor="end" className="font-mono" fontSize="11" fill="var(--muted)">
                 catalog must know all three, and wait for all three
               </text>
             </>
@@ -193,10 +194,10 @@ function FlowCompare() {
                   </text>
                 </g>
               ))}
-              <text x="830" y="222" className="font-mono" fontSize="11" fill="var(--ok)">
+              <text x="964" y="222" textAnchor="end" className="font-mono" fontSize="11" fill="var(--ok)">
                 the third one is down, its messages wait in its queue
               </text>
-              <text x="830" y="118" className="font-mono" fontSize="11" fill="var(--muted)">
+              <text x="964" y="118" textAnchor="end" className="font-mono" fontSize="11" fill="var(--muted)">
                 catalog knows none of them
               </text>
             </>
@@ -224,28 +225,97 @@ function FlowCompare() {
   )
 }
 
+function BrokerPicker() {
+  const [i, setI] = useState(0)
+  const reduce = useReducedMotion()
+  const b = BROKERS[i]
+
+  return (
+    <div className="overflow-hidden rounded-2xl border border-line bg-raised">
+      <div role="tablist" aria-label="Message brokers" className="flex flex-wrap gap-px bg-line">
+        {BROKERS.map((x, n) => {
+          const on = n === i
+          return (
+            <button
+              key={x.name}
+              role="tab"
+              aria-selected={on}
+              type="button"
+              onClick={() => setI(n)}
+              className={`flex flex-1 items-center justify-center gap-2.5 px-4 py-4 text-[13.5px] whitespace-nowrap transition-colors ${
+                on ? 'bg-accent-soft text-accent' : 'bg-raised text-muted hover:text-ink'
+              }`}
+            >
+              {x.tech ? <TechIcon tech={x.tech} size={20} label={false} /> : <LightningIcon size={18} />}
+              {x.name}
+            </button>
+          )
+        })}
+      </div>
+
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={b.name}
+          initial={reduce ? false : { opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.28, ease: EASE }}
+          className="grid grid-cols-1 gap-x-10 gap-y-6 p-6 md:grid-cols-3 md:p-8"
+        >
+          <div>
+            <p className="font-mono text-[11px] text-accent">{b.model}</p>
+            <p className="mt-2.5 text-[14.5px] leading-relaxed text-muted">
+              <Hi>{b.shape}</Hi>
+            </p>
+          </div>
+          <div>
+            <p className="font-mono text-[11px] tracking-[0.14em] text-faint uppercase">Reach for it when</p>
+            <p className="mt-2.5 text-[14.5px] leading-relaxed text-muted">{b.reach}</p>
+          </div>
+          <div>
+            <p className="font-mono text-[11px] tracking-[0.14em] text-faint uppercase">The cost</p>
+            <p className="mt-2.5 text-[14.5px] leading-relaxed text-muted">{b.cost}</p>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  )
+}
+
 export function BrokersSection() {
   return (
-    <section id="events" className="border-b border-line bg-sunken py-20 lg:py-28">
-      <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-        <Reveal>
-          <div className="mb-5 flex items-center gap-4">
-            <TechIcon tech="rabbitmq" size={40} />
-            <TechIcon tech="apachekafka" size={40} />
-            <TechIcon tech="natsdotio" size={40} />
-            <TechIcon tech="apachepulsar" size={40} />
-          </div>
-          <h2 className="max-w-[22ch] text-[clamp(1.9rem,4.2vw,3.1rem)] leading-[1.05] font-medium tracking-[-0.03em] text-ink">
-            Events are how services stop depending on each other
-          </h2>
-          <p className="mt-5 max-w-[64ch] text-[16px] leading-relaxed text-muted">
-            <Hi>
-              {'A request is a question you wait for an answer to. An event is a statement you publish and forget. Most of what makes a distributed system distributed is that second one.'}
-            </Hi>
-          </p>
-        </Reveal>
+    <section
+      id="events"
+      style={{ ['--tint' as string]: '#7048e8' }}
+      className="border-b border-line bg-canvas pb-20 lg:pb-28"
+    >
+      <CurveBand>
+        <div className="mx-auto max-w-[1400px] px-5 pt-28 pb-20 md:px-10 lg:pt-32 lg:pb-24">
+          <Reveal>
+            <div className="mb-6 flex items-center gap-3">
+              {(['rabbitmq', 'apachekafka', 'natsdotio', 'apachepulsar'] as const).map((t) => (
+                <span
+                  key={t}
+                  className="grid size-12 place-items-center rounded-2xl bg-white shadow-[0_8px_24px_-10px_rgb(0_0_0/0.4)]"
+                >
+                  <TechIcon tech={t} size={26} />
+                </span>
+              ))}
+            </div>
+            <h2 className="max-w-[20ch] text-[clamp(1.9rem,4.2vw,3.1rem)] leading-[1.05] font-medium tracking-[-0.03em] text-white">
+              Events are how services stop depending on each other
+            </h2>
+            <p className="mt-5 max-w-[58ch] text-[16.5px] leading-relaxed text-white/90">
+              A request is a question you wait for an answer to. An event is a statement you publish
+              and forget. Most of what makes a distributed system distributed is that second one.
+            </p>
+          </Reveal>
+        </div>
+      </CurveBand>
 
-        <Reveal delay={0.08} className="mt-10">
+      <SweepFade height={620}>
+      <div className="mx-auto max-w-[1400px] px-5 pt-12 md:px-10">
+        <Reveal delay={0.08}>
           <FlowCompare />
         </Reveal>
 
@@ -350,39 +420,9 @@ export function BrokersSection() {
             <QueueVsLog />
           </Reveal>
 
-          <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
-            {BROKERS.map((b, i) => (
-              <Reveal
-                key={b.name}
-                as="article"
-                delay={i * 0.05}
-                className="flex min-w-0 flex-col rounded-2xl border border-line bg-raised p-6"
-              >
-                <div className="flex h-9 items-center">
-                  {b.tech ? (
-                    <TechIcon tech={b.tech} size={30} />
-                  ) : (
-                    <span className="text-faint">
-                      <LightningIcon size={26} />
-                    </span>
-                  )}
-                </div>
-                <h4 className="mt-3.5 text-[16px] font-medium text-ink">{b.name}</h4>
-                <p className="mt-1 font-mono text-[11px] text-accent">{b.model}</p>
-                <p className="mt-4 text-[13.5px] leading-relaxed text-muted">
-                  <Hi>{b.shape}</Hi>
-                </p>
-                <p className="mt-4 text-[13px] leading-relaxed text-faint">
-                  <span className="text-ink">Reach for it when </span>
-                  {b.reach}
-                </p>
-                <p className="mt-3 text-[13px] leading-relaxed text-faint">
-                  <span className="text-ink">The cost. </span>
-                  {b.cost}
-                </p>
-              </Reveal>
-            ))}
-          </div>
+          <Reveal delay={0.06} className="mt-5">
+            <BrokerPicker />
+          </Reveal>
         </div>
 
         {/* What this repository actually does */}
@@ -447,6 +487,7 @@ consumer   events, prefetch 50, ack after fan-out`}</code>
           </div>
         </div>
       </div>
+      </SweepFade>
     </section>
   )
 }
