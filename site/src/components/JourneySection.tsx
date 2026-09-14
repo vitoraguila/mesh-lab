@@ -222,7 +222,7 @@ export function JourneySection() {
 
   return (
     <section id="journey"
-      style={{ ["--tint" as string]: "#e64980" }} className="border-b border-line tinted py-20 lg:py-28">
+      style={{ ["--tint" as string]: "#e64980" }} className="border-b border-line wash py-20 lg:py-28">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <Reveal>
           <h2 className="max-w-[22ch] text-[clamp(1.9rem,4.2vw,3.1rem)] leading-[1.05] font-medium tracking-[-0.03em] text-ink">

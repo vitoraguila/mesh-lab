@@ -83,7 +83,7 @@ const STEPS: Step[] = [
 export function InstallSection() {
   return (
     <section id="install"
-      style={{ ["--tint" as string]: "#f59f00" }} className="border-b border-line tinted py-20 lg:py-28">
+      style={{ ["--tint" as string]: "#f59f00" }} className="border-b border-line wash py-20 lg:py-28">
       <div className="mx-auto max-w-[980px] px-5 md:px-10">
         <Reveal>
           <p className="mb-3 font-mono text-[11px] tracking-[0.18em] text-accent uppercase">

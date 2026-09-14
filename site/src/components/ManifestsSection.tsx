@@ -22,7 +22,7 @@ export function ManifestsSection() {
 
   return (
     <section id="manifests"
-      style={{ ["--tint" as string]: "#1c7ed6" }} className="border-b border-line tinted-soft py-20 lg:py-28">
+      style={{ ["--tint" as string]: "#1c7ed6" }} className="border-b border-line bg-canvas py-20 lg:py-28">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <Reveal>
           <div className="mb-5 flex items-center gap-4">

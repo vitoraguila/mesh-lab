@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 
 const SWEEP =
-  'linear-gradient(100deg, var(--sweep-1), var(--sweep-2) 38%, var(--sweep-3) 68%, var(--sweep-4))'
+  'linear-gradient(to right, var(--sweep-1), var(--sweep-2) 38%, var(--sweep-3) 68%, var(--sweep-4))'
 
 /**
  * The page's one loud moment. The band takes its height from its children, so

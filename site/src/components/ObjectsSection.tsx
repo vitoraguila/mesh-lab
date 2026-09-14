@@ -101,7 +101,7 @@ const EDGES: { id: string; d: string; label?: string; lx?: number; ly?: number }
 
 function ChartTree() {
   return (
-    <div className="mt-6 rounded-xl border border-line tinted-soft p-4">
+    <div className="mt-6 rounded-xl border border-line bg-canvas p-4">
       <pre className="font-mono text-[11.5px] leading-[1.9] text-ink">
         <code>{`apps/catalog/deploy/helm/
   Chart.yaml
@@ -124,7 +124,7 @@ export function ObjectsSection() {
 
   return (
     <section id="objects"
-      style={{ ["--tint" as string]: "#65a30d" }} className="tinted-soft border-b border-line py-20 lg:py-28">
+      style={{ ["--tint" as string]: "#65a30d" }} className="bg-canvas border-b border-line py-20 lg:py-28">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <Reveal>
           <div className="mb-5 flex items-center gap-4">

@@ -32,7 +32,7 @@
   --sweep-2: #f43f5e;
   --sweep-3: #ff5c29;
   --sweep-4: #fbbf24;
-  --tint-strength: 15%;
+  --wash-strength: 30%;
 }
 
 [data-theme='light'] {
@@ -43,7 +43,7 @@
   --line-strong: rgb(14 14 16 / 0.24);
   --ink: #15161a;
   --muted: #42454b;
-  --faint: #4d5056;
+  --faint: #5b5e64;
   --accent: #c2380a;
   --accent-quiet: #a52f08;
   --accent-soft: rgb(194 56 10 / 0.10);
@@ -57,7 +57,7 @@
   --sweep-2: #e64980;
   --sweep-3: #e8590c;
   --sweep-4: #f59f00;
-  --tint-strength: 34%;
+  --wash-strength: 26%;
 }
 
 @theme inline {
@@ -137,20 +137,36 @@
 }
 
 @layer utilities {
-  /* Section grounds. Each section carries its own hue in --tint, mixed into the
-     canvas at a few percent, so the page changes temperature as you read without
-     ever leaving the light. */
-  .tinted {
-    background-color: color-mix(in oklab, var(--tint, var(--accent)) var(--tint-strength), var(--canvas));
+  /* Section grounds. The page stays white; colour arrives as two large, soft
+     glows in the section's own hue, so the ground has depth without turning
+     into a flat block. */
+  .wash {
+    position: relative;
+    isolation: isolate;
+    background-color: var(--canvas);
   }
 
-  /* the quieter half of the alternation, so every section still carries colour */
-  .tinted-soft {
-    background-color: color-mix(in oklab, var(--tint, var(--accent)) calc(var(--tint-strength) * 0.42), var(--canvas));
+  .wash::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        76% 58% at 86% 0%,
+        color-mix(in oklab, var(--tint, var(--accent)) var(--wash-strength), transparent),
+        transparent 68%
+      ),
+      radial-gradient(
+        64% 52% at 4% 96%,
+        color-mix(in oklab, var(--tint-b, var(--tint, var(--accent))) calc(var(--wash-strength) * 0.7), transparent),
+        transparent 70%
+      );
   }
 
-  .tinted-deep {
-    background-color: color-mix(in oklab, var(--tint, var(--accent)) calc(var(--tint-strength) * 1.9), var(--canvas));
+  .wash-soft::before {
+    --wash-strength: 14%;
   }
 
   .sweep-text {

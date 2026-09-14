@@ -89,7 +89,7 @@ function Body({ p }: { p: Panel }) {
       <p className="mt-3 max-w-[46ch] text-[14.5px] leading-relaxed text-muted">
         <Hi>{p.body}</Hi>
       </p>
-      <div className="mt-5 overflow-x-auto rounded-xl border border-line tinted p-4">
+      <div className="mt-5 overflow-x-auto rounded-xl border border-line wash p-4">
         <pre className="font-mono text-[11.5px] leading-[1.8] text-ink">
           <code>{p.code.join('\n')}</code>
         </pre>
@@ -159,7 +159,7 @@ export function ImagesSection() {
       ref={wrapRef}
       id="images"
       style={{ ["--tint" as string]: "#f59f00" }}
-      className="tinted relative flex flex-col overflow-hidden border-b border-line lg:h-[100dvh]"
+      className="wash relative flex flex-col overflow-hidden border-b border-line lg:h-[100dvh]"
     >
       <div className="mx-auto w-full max-w-[1400px] shrink-0 px-5 pt-20 md:px-10 lg:pt-24">
         <Reveal>
