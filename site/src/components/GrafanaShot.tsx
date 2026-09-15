@@ -11,7 +11,7 @@ import { Hi } from '../lib/terms'
 export function GrafanaShot() {
   const [ok, setOk] = useState(true)
   const [full, setFull] = useState(false)
-  if (!ok) return null
+  if (!import.meta.env.VITE_GRAFANA_SHOT_AVAILABLE || !ok) return null
 
   return (
     <figure className="mt-8">

@@ -105,7 +105,9 @@ GRAFANA_USER=... GRAFANA_PASSWORD=... \
 
 It writes PNGs at 2x and prints the one-liner that converts them to the `.webp`
 the page loads. The Grafana figure renders only when `shots/grafana.webp`
-exists, so the section is complete either way.
+exists at build time, so the section is complete either way. Vite checks for
+the optional file before building; the published page never requests a missing
+capture. Restart the dev server after adding a new Grafana capture.
 
 ## Conventions
 
