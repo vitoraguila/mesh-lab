@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import { TECH } from '../../lib/techIcons'
 import type { TechKey } from '../../lib/techIcons'
 
@@ -27,7 +28,7 @@ export function TechIcon({
       height={size}
       className={`${mono ? '' : 'tech-mark'} ${className}`}
       data-tech={tech}
-      style={mono ? undefined : { color: icon.hex }}
+      style={mono ? undefined : { '--tech-color': icon.hex } as CSSProperties}
       role={label ? 'img' : undefined}
       aria-label={label ? icon.name : undefined}
       aria-hidden={label ? undefined : true}
@@ -65,7 +66,7 @@ export function TechGlyph({
       opacity={opacity}
       className={mono ? undefined : 'tech-mark'}
       data-tech={mono ? undefined : tech}
-      style={{ color: mono ?? icon.hex }}
+      style={mono ? { color: mono } : { '--tech-color': icon.hex } as CSSProperties}
     >
       <title>{icon.name}</title>
       <path d={icon.path} fill="currentColor" />

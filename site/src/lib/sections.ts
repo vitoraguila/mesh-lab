@@ -123,7 +123,7 @@ export const CATEGORIES: Category[] = [
         id: 'install',
         label: 'Run it locally',
         short: 'Install',
-        blurb: 'From Homebrew to a cluster, seven steps.',
+        blurb: 'Clone the repository and bring up your local cluster.',
         techs: ['docker', 'kubernetes', 'helm'],
       },
       {

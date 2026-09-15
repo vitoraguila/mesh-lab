@@ -1,90 +1,53 @@
 import { motion, useReducedMotion } from 'motion/react'
-import { ArrowDownIcon, TerminalWindowIcon } from '@phosphor-icons/react'
+import { ArrowDownRightIcon, ArrowUpRightIcon, TerminalWindowIcon, AsteriskSimpleIcon } from '@phosphor-icons/react'
 import { HeroTopology } from './HeroTopology'
 import { EASE } from '../lib/motion'
 
-const LINES = ['How a microservice', 'architecture moves data.']
+const ROUTES = [
+  { href: 'journey', title: 'Follow a request', detail: 'Routing & authorization' },
+  { href: 'events', title: 'Follow an event', detail: 'Messages & queues' },
+  { href: 'signals', title: 'Follow a metric', detail: 'Prometheus & Grafana' },
+]
 
 export function Hero() {
   const reduce = useReducedMotion()
-
   return (
-    <section
-      id="top"
-      className="relative flex min-h-[100dvh] items-center overflow-hidden bg-blueprint pt-24 pb-16"
-    >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute top-[-18%] left-[52%] size-[680px] rounded-full opacity-60 blur-[130px]"
-        style={{ background: 'var(--glow)' }}
-      />
-
-      <div className="relative mx-auto grid w-full max-w-[1400px] grid-cols-1 items-center gap-14 px-5 md:px-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
-        <div>
-          <h1 className="text-[clamp(2.6rem,7vw,4.6rem)] leading-[1.03] font-medium tracking-[-0.035em] text-ink">
-            {LINES.map((line, i) => (
-              <motion.span
-                key={line}
-                className="block"
-                initial={reduce ? false : { opacity: 0, y: 34 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.85, delay: 0.08 * i, ease: EASE }}
-              >
-                {i === 1 ? (
-                  <>
-                    architecture <span className="text-accent">moves data.</span>
-                  </>
-                ) : (
-                  line
-                )}
-              </motion.span>
+    <section id="top" className="hero">
+      <div className="hero-shapes" aria-hidden="true"><AsteriskSimpleIcon className="hero-spark" weight="bold" /><span className="hero-orbit" /></div>
+      <div className="hero-layout">
+        <div className="hero-copy">
+          <motion.p className="hero-intro" initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .7 }}>
+            A free, open microservice case study
+          </motion.p>
+          <h1 className="hero-title">
+            {['Learn how', 'microservices move.'].map((line, i) => (
+              <span className="hero-line" key={line}>
+                <motion.span initial={reduce ? false : { y: '105%' }} animate={{ y: 0 }}
+                  transition={{ duration: .9, delay: i * .12, ease: EASE }}>
+                  {line}
+                </motion.span>
+              </span>
             ))}
           </h1>
-
-          <motion.p
-            initial={reduce ? false : { opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.34, ease: EASE }}
-            className="mt-7 max-w-[52ch] text-[17px] leading-relaxed text-muted md:text-[18px]"
-          >
-            One runnable Kubernetes case study: how a request is routed and authorized, how events
-            reach a broker, how metrics are collected.
+          <motion.p className="hero-description" initial={reduce ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .8, delay: .25, ease: EASE }}>
+            Explore a real architecture through requests, events, and metrics. No signup, no sales pitch, nothing to trade. Just the system, explained.
           </motion.p>
-
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.44, ease: EASE }}
-            className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center"
-          >
-            <a
-              href="#overview"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-medium whitespace-nowrap text-on-accent transition-colors duration-200 hover:bg-accent-quiet active:translate-y-px"
-              style={{ boxShadow: '0 14px 40px -18px var(--glow)' }}
-            >
-              See the architecture
-              <ArrowDownIcon size={15} weight="bold" />
-            </a>
-            <a
-              href="#install"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-line-strong px-7 py-3.5 text-sm font-medium whitespace-nowrap text-ink transition-colors duration-200 hover:border-accent hover:text-accent active:translate-y-px"
-            >
-              <TerminalWindowIcon size={16} />
-              Run it locally
-            </a>
+          <motion.div className="hero-actions" initial={reduce ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .8, delay: .35, ease: EASE }}>
+            <a href="#overview" className="primary-link action-button">See the architecture <ArrowDownRightIcon size={20} /></a>
+            <a href="#install" className="secondary-link outline-button"><TerminalWindowIcon size={18} /> Run it locally</a>
           </motion.div>
         </div>
-
-        <motion.div
-          initial={reduce ? false : { opacity: 0, scale: 0.94 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.1, delay: 0.2, ease: EASE }}
-          className="flex justify-center lg:justify-end"
-        >
+        <motion.figure className="hero-model" initial={reduce ? false : { opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: .2, ease: EASE }}>
+          <div className="model-heading"><span>The request path</span><span>Illustrated example</span></div>
           <HeroTopology />
-        </motion.div>
+          <figcaption>Every service has a proxy. Every request meets a policy.</figcaption>
+        </motion.figure>
       </div>
-
+      <nav className="hero-routes" aria-label="Explore the three data flows">
+        {ROUTES.map(route => <a href={`#${route.href}`} key={route.href}>
+          <div><span>{route.detail}</span><strong>{route.title}</strong></div><ArrowUpRightIcon size={24} />
+        </a>)}
+      </nav>
       <div id="nav-sentinel" className="absolute top-[72px] left-0 h-px w-px" />
     </section>
   )

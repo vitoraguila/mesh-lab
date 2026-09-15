@@ -1,18 +1,28 @@
+import { SectionTitle } from './ui/SectionTitle'
 import { Reveal } from './ui/Reveal'
 import { Hi } from '../lib/terms'
 import { Terminal } from './ui/Terminal'
 import { StudioPreview } from './StudioPreview'
 import type { Line } from './ui/Terminal'
+import { GithubLogoIcon, ArrowUpRightIcon } from '@phosphor-icons/react'
 
 type Step = { title: string; body: string; title2?: string; lines: Line[] }
 
 const STEPS: Step[] = [
   {
     title: 'Get the prerequisites',
-    body: 'Docker Desktop running with roughly 8 GB of memory, plus the language runtimes. make tools installs minikube, helm, istioctl and the kubectl context helpers.',
+    body: 'These commands assume macOS with Homebrew. Install and start Docker Desktop with roughly 8 GB of memory, then install Git and the language runtimes.',
     lines: [
       { kind: 'comment', text: '# macOS with Homebrew' },
-      { kind: 'cmd', text: 'brew install node go python3 kubectl' },
+      { kind: 'cmd', text: 'brew install git node go python3 kubectl' },
+    ],
+  },
+  {
+    title: 'Clone the lab and enter the repository',
+    body: 'The entire case study is on GitHub. Clone it, enter mesh-lab, and run every make command below from this directory. make tools installs Minikube, Helm, istioctl and the context helpers.',
+    lines: [
+      { kind: 'cmd', text: 'git clone https://github.com/vitoraguila/mesh-lab.git' },
+      { kind: 'cmd', text: 'cd mesh-lab' },
       { kind: 'cmd', text: 'make tools' },
       { kind: 'out', text: 'minikube, helm, istioctl, kns/ktx, fzf' },
     ],
@@ -35,6 +45,9 @@ const STEPS: Step[] = [
       { kind: 'cmd', text: 'make secrets ENV=stg', note: '# generates .local/stg once' },
       { kind: 'cmd', text: 'make build' },
       { kind: 'cmd', text: 'make deploy ENV=stg' },
+      { kind: 'cmd', text: 'make restart ENV=stg' },
+      { kind: 'cmd', text: 'make smoke ENV=stg' },
+      { kind: 'comment', text: '# Repeat the ENV=prd steps for the second environment.' },
     ],
   },
   {
@@ -82,21 +95,23 @@ const STEPS: Step[] = [
 
 export function InstallSection() {
   return (
-    <section id="install"
-      style={{ ["--tint" as string]: "#f59f00" }} className="border-b border-line wash py-20 lg:py-28">
+    <section id="install" className="border-b border-line wash py-20 lg:py-28">
       <div className="mx-auto max-w-[980px] px-5 md:px-10">
         <Reveal>
           <p className="mb-3 font-mono text-[11px] tracking-[0.18em] text-accent uppercase">
             Run it yourself
           </p>
-          <h2 className="max-w-[20ch] text-[clamp(1.9rem,4.2vw,3.1rem)] leading-[1.05] font-medium tracking-[-0.03em] text-ink">
-            Running the whole thing locally
-          </h2>
+          <SectionTitle>
+            Your laptop. The whole lab.
+          </SectionTitle>
           <p className="mt-5 max-w-[58ch] text-[16px] leading-relaxed text-muted">
             <Hi>
               {'Nothing here touches a remote cluster. stg and prd are two namespaces in one local Minikube profile called mesh-study.'}
             </Hi>
           </p>
+          <a href="https://github.com/vitoraguila/mesh-lab" target="_blank" rel="noreferrer" className="outline-button mt-6 inline-flex items-center gap-3">
+            <GithubLogoIcon size={20} aria-hidden="true" /> Get the code on GitHub <ArrowUpRightIcon size={18} aria-hidden="true" />
+          </a>
         </Reveal>
 
         <StudioPreview />

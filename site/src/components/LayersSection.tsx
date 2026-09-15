@@ -1,3 +1,4 @@
+import { SectionTitle } from './ui/SectionTitle'
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -84,9 +85,8 @@ export function LayersSection() {
   useEffect(() => {
     const wrap = wrapRef.current
     if (!wrap) return
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-    const ctx = gsap.context(() => {
+    const media = gsap.matchMedia()
+    media.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
       ScrollTrigger.create({
         trigger: wrap,
         start: 'top top',
@@ -98,7 +98,7 @@ export function LayersSection() {
           const next = Math.min(STEPS.length - 1, Math.floor(self.progress * STEPS.length))
           setStep((cur) => (cur === next ? cur : next))
           // A slow continuous push-in, small enough that labels stay legible.
-          if (!reduce && stageRef.current) {
+          if (stageRef.current) {
             gsap.set(stageRef.current, {
               scale: 1 + self.progress * 0.16,
               transformOrigin: '460px 280px',
@@ -108,37 +108,34 @@ export function LayersSection() {
       })
     }, wrap)
 
-    return () => ctx.revert()
+    return () => media.revert()
   }, [])
 
   const active = STEPS[step]
 
   return (
-    <section id="layers"
-      style={{ ["--tint" as string]: "#7048e8" }} className="relative border-b border-line bg-canvas">
+    <section id="layers" className="relative border-b border-line bg-canvas">
       <div ref={wrapRef} className="min-h-[100dvh] overflow-hidden bg-canvas">
         <div className="mx-auto flex min-h-[100dvh] max-w-[1400px] flex-col justify-center px-5 py-14 md:px-10 md:py-20">
           <header className="mb-6 lg:mb-10">
             <p className="mb-2.5 font-mono text-[11px] tracking-[0.18em] text-accent uppercase">
               The layers
             </p>
-            <h2 className="max-w-[18ch] text-[clamp(1.9rem,4.2vw,3.1rem)] leading-[1.05] font-medium tracking-[-0.03em] text-ink">
-              From your laptop down to a container
-            </h2>
+            <SectionTitle>
+              A closer look inside the cluster.
+            </SectionTitle>
           </header>
 
           <div className="grid grid-cols-1 gap-7 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-14">
             {/* Explanation column, swapped per beat. */}
             <div className="order-2 lg:order-1">
-              <ol className="mb-5 flex gap-1.5 lg:mb-7" aria-label="Progress through the six layers">
+              <div className="layer-choices" role="group" aria-label="Explore the six layers">
                 {STEPS.map((s, i) => (
-                  <li
-                    key={s.key}
-                    className="h-[3px] flex-1 rounded-full transition-colors duration-500"
-                    style={{ background: i <= step ? 'var(--accent)' : 'var(--line)' }}
-                  />
+                  <button key={s.key} type="button" aria-pressed={step === i} onClick={() => setStep(i)}>
+                    {s.chip}
+                  </button>
                 ))}
-              </ol>
+              </div>
 
               <div key={active.key} className="animate-[fadeUp_0.5s_cubic-bezier(0.16,1,0.3,1)]">
                 <span className="inline-flex items-center rounded-lg bg-accent-soft px-2.5 py-1 font-mono text-[11px] text-accent">

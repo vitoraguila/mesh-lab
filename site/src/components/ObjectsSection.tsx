@@ -1,3 +1,4 @@
+import { SectionTitle } from './ui/SectionTitle'
 import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { Reveal } from './ui/Reveal'
@@ -123,17 +124,16 @@ export function ObjectsSection() {
   const litEdge = (id: string) => active.edges.includes(id)
 
   return (
-    <section id="objects"
-      style={{ ["--tint" as string]: "#65a30d" }} className="bg-canvas border-b border-line py-20 lg:py-28">
+    <section id="objects" className="bg-canvas border-b border-line py-20 lg:py-28">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <Reveal>
           <div className="mb-5 flex items-center gap-4">
             <TechIcon tech="kubernetes" size={36} />
             <TechIcon tech="helm" size={36} />
           </div>
-          <h2 className="max-w-[22ch] text-[clamp(1.9rem,4.2vw,3.1rem)] leading-[1.05] font-medium tracking-[-0.03em] text-ink">
-            Six objects, and how they hold each other up
-          </h2>
+          <SectionTitle>
+            Six objects. One working application.
+          </SectionTitle>
           <p className="mt-5 max-w-[58ch] text-[16px] leading-relaxed text-muted">
             <Hi>
               {'Kubernetes has hundreds of resource kinds. Running this whole study needs six. Pick one to see where it sits.'}
@@ -152,7 +152,7 @@ export function ObjectsSection() {
                 onMouseEnter={() => setKey(o.key)}
                 onFocus={() => setKey(o.key)}
                 onClick={() => setKey(o.key)}
-                className={`inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-[13.5px] transition-colors duration-200 ${
+                className={`choice-button inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-[13.5px] transition-colors duration-200 ${
                   on
                     ? 'border-accent bg-accent-soft text-accent'
                     : 'border-line text-muted hover:border-line-strong hover:text-ink'

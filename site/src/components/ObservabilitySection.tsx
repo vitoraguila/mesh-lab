@@ -1,3 +1,4 @@
+import { SectionTitle } from './ui/SectionTitle'
 import { Reveal } from './ui/Reveal'
 import { Hi } from '../lib/terms'
 import { TechGlyph, TechIcon } from './ui/TechIcon'
@@ -127,17 +128,16 @@ function ScrapeDiagram() {
 
 export function ObservabilitySection() {
   return (
-    <section id="signals"
-      style={{ ["--tint" as string]: "#0ca678" }} className="border-b border-line bg-canvas py-20 lg:py-28">
+    <section id="signals" className="border-b border-line bg-canvas py-20 lg:py-28">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <Reveal>
           <div className="mb-5 flex items-center gap-4">
             <TechIcon tech="prometheus" size={40} />
             <TechIcon tech="grafana" size={40} />
           </div>
-          <h2 className="max-w-[22ch] text-[clamp(1.9rem,4.2vw,3.1rem)] leading-[1.05] font-medium tracking-[-0.03em] text-ink">
-            Nobody sends a metric anywhere
-          </h2>
+          <SectionTitle>
+            How the system sees itself.
+          </SectionTitle>
           <p className="mt-5 max-w-[62ch] text-[16px] leading-relaxed text-muted">
             <Hi>
               {'Prometheus goes and fetches them, on a schedule, from every pod it can discover. That one design choice is why collection needs no credentials and never crosses the authorization boundary.'}

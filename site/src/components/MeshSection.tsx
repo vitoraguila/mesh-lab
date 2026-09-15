@@ -1,3 +1,4 @@
+import { SectionTitle } from './ui/SectionTitle'
 import { useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 import { LockKeyIcon, LockKeyOpenIcon } from '@phosphor-icons/react'
@@ -159,17 +160,17 @@ export function MeshSection() {
   const [injected, setInjected] = useState(true)
 
   return (
-    <section id="mesh"
-      style={{ ["--tint" as string]: "#e8590c" }} className="border-b border-line wash py-20 lg:py-28">
+    <section id="mesh" className="border-b border-line wash py-20 lg:py-28">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <Reveal>
           <div className="mb-5 flex items-center gap-4">
             <TechIcon tech="istio" size={40} />
             <TechIcon tech="envoyproxy" size={40} />
           </div>
-          <h2 className="max-w-[20ch] text-[clamp(1.9rem,4.2vw,3.1rem)] leading-[1.05] font-medium tracking-[-0.03em] text-ink">
-            Istio adds a proxy you did not write
-          </h2>
+          <SectionTitle>
+            Your code handles the business.
+            The mesh handles the traffic.
+          </SectionTitle>
           <p className="mt-5 max-w-[60ch] text-[16px] leading-relaxed text-muted">
             <Hi>
               {'Envoy is the proxy. Istio is the control plane that configures every copy of it. Flip the switch to see what injection actually changes about the pod.'}

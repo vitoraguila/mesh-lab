@@ -1,18 +1,12 @@
-import { useEffect, useRef, useState } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { CaretDownIcon } from '@phosphor-icons/react'
+import { useRef, useState } from 'react'
+import { motion, useReducedMotion } from 'motion/react'
+import { ArrowLeftIcon, ArrowRightIcon } from '@phosphor-icons/react'
+import { SectionTitle } from './ui/SectionTitle'
 import { Reveal } from './ui/Reveal'
 import { TechIcon } from './ui/TechIcon'
 import { Hi } from '../lib/terms'
 import { EASE } from '../lib/motion'
 import type { TechKey } from '../lib/techIcons'
-
-gsap.registerPlugin(ScrollTrigger)
-
-const FOLD = 132
-const GAP = 12
 
 type Panel = { n: string; tag: string; mark: TechKey; title: string; body: string; code: string[]; foot: string }
 
@@ -101,197 +95,58 @@ function Body({ p }: { p: Panel }) {
   )
 }
 
+const ARTIFACTS = [
+  { title: 'Go service', detail: 'main.go + go.mod', result: 'Your application starts here.' },
+  { title: 'Build recipe', detail: 'Dockerfile', result: 'Describe what goes into the image.' },
+  { title: 'Container image', detail: 'catalog:dev', result: 'A portable package, ready to run.' },
+  { title: 'Local node', detail: 'mesh-study', result: 'The cluster can now start your image.' },
+  { title: 'Two environments', detail: 'stg / prd', result: 'Same image. Independent configuration.' },
+]
+
 export function ImagesSection() {
-  const wrapRef = useRef<HTMLElement>(null)
-  const railRef = useRef<HTMLDivElement>(null)
-  const [openW, setOpenW] = useState(620)
-  const [scrolled, setScrolled] = useState(0)
-  const [hovered, setHovered] = useState<number | null>(null)
-  const [tapped, setTapped] = useState(0)
+  const [active, setActive] = useState(0)
+  const tabs = useRef<(HTMLButtonElement | null)[]>([])
   const reduce = useReducedMotion()
-
-  const active = hovered ?? scrolled
-
-  useEffect(() => {
-    const rail = railRef.current
-    if (!rail) return
-    const measure = () => {
-      const inner = rail.clientWidth - 40 // the rail's own horizontal padding
-      setOpenW(Math.max(360, Math.round(inner - (PANELS.length - 1) * (FOLD + GAP))))
-    }
-    measure()
-    const ro = new ResizeObserver(measure)
-    ro.observe(rail)
-    return () => ro.disconnect()
-  }, [])
-
-  useEffect(() => {
-    const wrap = wrapRef.current
-    if (!wrap) return
-    const wide = window.matchMedia('(min-width: 1024px)')
-
-    const ctx = gsap.context(() => {
-      if (!wide.matches) return
-      ScrollTrigger.create({
-        trigger: wrap,
-        start: 'top top',
-        end: () => `+=${PANELS.length * 58}%`,
-        pin: true,
-        scrub: true,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          const i = Math.min(PANELS.length - 1, Math.floor(self.progress * PANELS.length))
-          setScrolled((cur) => (cur === i ? cur : i))
-        },
-      })
-    }, wrap)
-
-    const refresh = () => ScrollTrigger.refresh()
-    wide.addEventListener('change', refresh)
-    return () => {
-      wide.removeEventListener('change', refresh)
-      ctx.revert()
-    }
-  }, [])
-
-  return (
-    <section
-      ref={wrapRef}
-      id="images"
-      style={{ ["--tint" as string]: "#f59f00" }}
-      className="wash relative flex flex-col overflow-hidden border-b border-line lg:h-[100dvh]"
-    >
-      <div className="mx-auto w-full max-w-[1400px] shrink-0 px-5 pt-20 md:px-10 lg:pt-24">
-        <Reveal>
-          <div className="mb-4 flex items-center gap-4">
-            <TechIcon tech="go" size={32} />
-            <TechIcon tech="docker" size={32} />
-            <TechIcon tech="kubernetes" size={32} />
-          </div>
-          <h2 className="max-w-[22ch] text-[clamp(1.6rem,3.4vw,2.6rem)] leading-[1.06] font-medium tracking-[-0.03em] text-ink">
-            How your code becomes something a cluster can run
-          </h2>
-          <p className="mt-4 max-w-[56ch] text-[15.5px] leading-relaxed text-muted">
-            <Hi>{'Five steps from a Go file on your disk to a container running under a scheduler.'}</Hi>
-          </p>
-        </Reveal>
+  const panel = PANELS[active]
+  const artifact = ARTIFACTS[active]
+  function select(index: number, focus = false) {
+    const next = Math.max(0, Math.min(PANELS.length - 1, index))
+    setActive(next)
+    if (focus) tabs.current[next]?.focus({ preventScroll: true })
+  }
+  return <section id="images" className="image-walkthrough">
+    <div className="walkthrough-inner">
+      <Reveal>
+        <div className="mb-4 flex items-center gap-4"><TechIcon tech="go" size={32} /><TechIcon tech="docker" size={32} /><TechIcon tech="kubernetes" size={32} /></div>
+        <SectionTitle>From source code to running service.</SectionTitle>
+        <p className="walkthrough-intro">Five steps. One portable application. Choose a step to see what changes along the way.</p>
+      </Reveal>
+      <div className="build-tabs" role="tablist" aria-label="From source to running service">
+        {PANELS.map((p, i) => <button key={p.n} ref={el => { tabs.current[i] = el }} type="button" role="tab"
+          id={`build-tab-${i}`} aria-controls="build-panel" aria-selected={active === i} tabIndex={active === i ? 0 : -1}
+          onClick={() => select(i)} onKeyDown={event => {
+            const next = event.key === 'ArrowRight' ? (active + 1) % PANELS.length : event.key === 'ArrowLeft' ? (active + PANELS.length - 1) % PANELS.length : event.key === 'Home' ? 0 : event.key === 'End' ? PANELS.length - 1 : null
+            if (next !== null) { event.preventDefault(); select(next, true) }
+          }}>
+          <span className="build-step-number">{p.n}</span><TechIcon tech={p.mark} size={24} label={false} /><span>{p.tag}</span>
+          {i < PANELS.length - 1 && <ArrowRightIcon className="build-step-arrow" size={18} aria-hidden="true" />}
+        </button>)}
       </div>
-
-      {/* Desktop: one panel open, the rest folded to a spine. Widths are measured
-          so the open panel's content is laid out once and never reflows mid-transition,
-          which is what made this stutter. */}
-      <div
-        ref={railRef}
-        className="mx-auto hidden w-full max-w-[1400px] min-h-0 flex-1 items-center px-5 md:px-10 lg:flex"
-        onMouseLeave={() => setHovered(null)}
-      >
-        <div className="flex h-[min(520px,58vh)] w-full gap-3">
-          {PANELS.map((p, i) => {
-            const on = i === active
-            return (
-              <article
-                key={p.n}
-                onMouseEnter={() => setHovered(i)}
-                onFocus={() => setHovered(i)}
-                tabIndex={0}
-                aria-current={on ? 'true' : undefined}
-                style={{
-                  width: on ? openW : FOLD,
-                  transition: reduce ? 'none' : 'width 520ms cubic-bezier(0.16,1,0.3,1), border-color 300ms',
-                }}
-                className={`relative shrink-0 cursor-pointer overflow-hidden rounded-2xl border ${
-                  on ? 'border-accent bg-raised' : 'border-line bg-raised/70 hover:border-line-strong'
-                }`}
-              >
-                {/* folded face */}
-                <div
-                  aria-hidden={on}
-                  style={{ width: FOLD, transition: reduce ? 'none' : 'opacity 220ms' }}
-                  className={`absolute inset-y-0 left-0 flex flex-col justify-between p-5 ${
-                    on ? 'pointer-events-none opacity-0' : 'opacity-100'
-                  }`}
-                >
-                  <span className="font-mono text-[26px] leading-none font-medium text-faint">{p.n}</span>
-                  <span>
-                    <TechIcon tech={p.mark} size={26} />
-                    <span className="mt-3 block text-[14px] font-medium text-muted">{p.tag}</span>
-                  </span>
-                </div>
-
-                {/* open face, laid out at its final width from the start */}
-                <div
-                  aria-hidden={!on}
-                  style={{
-                    width: openW,
-                    transition: reduce ? 'none' : 'opacity 260ms 140ms',
-                  }}
-                  className={`absolute inset-y-0 left-0 overflow-y-auto p-7 ${
-                    on ? 'opacity-100' : 'pointer-events-none opacity-0'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="font-mono text-[26px] leading-none font-medium text-accent">{p.n}</span>
-                    <span className="h-px flex-1" style={{ background: 'var(--line)' }} />
-                    <TechIcon tech={p.mark} size={28} />
-                  </div>
-                  <h3 className="mt-5 max-w-[24ch] text-[19px] leading-[1.2] font-medium tracking-[-0.015em] text-ink">
-                    {p.title}
-                  </h3>
-                  <Body p={p} />
-                </div>
-              </article>
-            )
-          })}
-        </div>
+      <div id="build-panel" role="tabpanel" aria-labelledby={`build-tab-${active}`} tabIndex={0} className="build-panel">
+        <motion.div className={`build-artifact build-artifact-${active}`} key={`artifact-${active}`}
+          initial={reduce ? false : { opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .45, ease: EASE }}>
+          <div className="artifact-sheet"><TechIcon tech={panel.mark} size={64} /><strong>{artifact.title}</strong><code>{artifact.detail}</code></div>
+          <p>{artifact.result}</p>
+        </motion.div>
+        <motion.div className="build-explanation" key={active} initial={reduce ? false : { opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .35, ease: EASE }}>
+          <h3>{panel.title}</h3><Body p={panel} />
+        </motion.div>
       </div>
-
-      {/* Narrow screens: the same five, as a tap-to-open stack. */}
-      <div className="mx-auto w-full max-w-[1400px] px-5 py-12 md:px-10 lg:hidden">
-        <div className="flex flex-col gap-3">
-          {PANELS.map((p, i) => {
-            const on = i === tapped
-            return (
-              <article
-                key={p.n}
-                className={`overflow-hidden rounded-2xl border transition-colors ${
-                  on ? 'border-accent bg-raised' : 'border-line bg-raised/70'
-                }`}
-              >
-                <button
-                  type="button"
-                  aria-expanded={on}
-                  onClick={() => setTapped(i)}
-                  className="flex w-full items-center gap-3 p-5 text-left"
-                >
-                  <span className={`font-mono text-[20px] leading-none ${on ? 'text-accent' : 'text-faint'}`}>
-                    {p.n}
-                  </span>
-                  <span className="flex-1 text-[15.5px] font-medium text-ink">{p.title}</span>
-                  <TechIcon tech={p.mark} size={22} />
-                  <motion.span animate={{ rotate: on ? 180 : 0 }} className="text-faint">
-                    <CaretDownIcon size={14} weight="bold" />
-                  </motion.span>
-                </button>
-                <AnimatePresence initial={false}>
-                  {on && (
-                    <motion.div
-                      initial={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
-                      animate={reduce ? { opacity: 1 } : { height: 'auto', opacity: 1 }}
-                      exit={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
-                      transition={{ duration: 0.34, ease: EASE }}
-                      className="overflow-hidden"
-                    >
-                      <div className="px-5 pb-5">
-                        <Body p={p} />
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </article>
-            )
-          })}
-        </div>
+      <div className="build-controls">
+        <p aria-live="polite">Step {active + 1} of {PANELS.length}<span>{panel.tag}</span></p>
+        <div><button type="button" className="icon-control" aria-label="Previous build step" disabled={active === 0} onClick={() => select(active - 1)}><ArrowLeftIcon size={20} /></button>
+        <button type="button" className="action-button" disabled={active === PANELS.length - 1} onClick={() => select(active + 1)}>Next step <ArrowRightIcon size={20} /></button></div>
       </div>
-    </section>
-  )
+    </div>
+  </section>
 }

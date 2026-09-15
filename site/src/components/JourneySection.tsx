@@ -1,3 +1,4 @@
+import { SectionTitle } from './ui/SectionTitle'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion } from 'motion/react'
 import { ArrowClockwiseIcon, PaperPlaneTiltIcon } from '@phosphor-icons/react'
@@ -221,13 +222,12 @@ export function JourneySection() {
   useEffect(() => () => void runId.current++, [])
 
   return (
-    <section id="journey"
-      style={{ ["--tint" as string]: "#e64980" }} className="border-b border-line wash py-20 lg:py-28">
+    <section id="journey" className="border-b border-line wash py-20 lg:py-28">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <Reveal>
-          <h2 className="max-w-[22ch] text-[clamp(1.9rem,4.2vw,3.1rem)] leading-[1.05] font-medium tracking-[-0.03em] text-ink">
-            Send a request and watch where it stops
-          </h2>
+          <SectionTitle>
+            One request. Every decision.
+          </SectionTitle>
           <p className="mt-5 max-w-[60ch] text-[16px] leading-relaxed text-muted">
             <Hi>
               {'Pick who is calling and what they are calling. The path, the checks and the verdict are the ones this project really enforces.'}
@@ -289,7 +289,7 @@ export function JourneySection() {
               type="button"
               onClick={send}
               disabled={running}
-              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-5 py-3 text-[13.5px] font-medium whitespace-nowrap text-on-accent transition-colors hover:bg-accent-quiet disabled:opacity-55"
+              className="action-button request-launch mt-6 w-full"
             >
               {running ? (
                 <>

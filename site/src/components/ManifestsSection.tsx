@@ -1,3 +1,4 @@
+import { SectionTitle } from './ui/SectionTitle'
 import { useMemo, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { FileCodeIcon, FolderOpenIcon } from '@phosphor-icons/react'
@@ -21,17 +22,16 @@ export function ManifestsSection() {
   const showing = canRender && view === 'rendered' ? active.rendered! : active.template
 
   return (
-    <section id="manifests"
-      style={{ ["--tint" as string]: "#1c7ed6" }} className="border-b border-line bg-canvas py-20 lg:py-28">
+    <section id="manifests" className="border-b border-line bg-canvas py-20 lg:py-28">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <Reveal>
           <div className="mb-5 flex items-center gap-4">
             <TechIcon tech="helm" size={40} />
             <TechIcon tech="kubernetes" size={40} />
           </div>
-          <h2 className="max-w-[24ch] text-[clamp(1.9rem,4.2vw,3.1rem)] leading-[1.05] font-medium tracking-[-0.03em] text-ink">
-            The files behind all of it
-          </h2>
+          <SectionTitle>
+            Open the files. Connect the dots.
+          </SectionTitle>
           <p className="mt-5 max-w-[64ch] text-[16px] leading-relaxed text-muted">
             <Hi>
               {'Every behaviour described on this page is a file in the repository. Pick one and flip between the Helm template and what it renders to for staging. The accent marks what a value supplied.'}

@@ -1,3 +1,4 @@
+import { SectionTitle } from './ui/SectionTitle'
 import { Reveal } from './ui/Reveal'
 import { Hi } from '../lib/terms'
 import { TechGlyph, TechIcon } from './ui/TechIcon'
@@ -67,13 +68,12 @@ const FACTS: { tech: TechKey; title: string; body: string }[] = [
 
 export function ArchitectureSection() {
   return (
-    <section id="overview"
-      style={{ ["--tint" as string]: "#1c7ed6" }} className="border-b border-line wash py-20 lg:py-28">
+    <section id="overview" className="border-b border-line wash py-20 lg:py-28">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <Reveal>
-          <h2 className="max-w-[20ch] text-[clamp(1.9rem,4.2vw,3.1rem)] leading-[1.05] font-medium tracking-[-0.03em] text-ink">
-            Everything that runs, on one node
-          </h2>
+          <SectionTitle>
+            One system. Three kinds of flow.
+          </SectionTitle>
           <p className="mt-5 max-w-[62ch] text-[16px] leading-relaxed text-muted">
             <Hi>
               {'Fifteen workloads in three languages. One line is a request, one is telemetry, one is metric collection, and the three never share a path.'}

@@ -3,6 +3,7 @@ import { Reveal } from './ui/Reveal'
 import { Hi } from '../lib/terms'
 
 const READING = [
+  ['Mesh Lab on GitHub', 'https://github.com/vitoraguila/mesh-lab'],
   ['Istio delegation', 'https://istio.io/latest/docs/reference/config/networking/virtual-service/#Delegate'],
   ['Istio authorization', 'https://istio.io/latest/docs/concepts/security/#authorization'],
   ['Pods', 'https://kubernetes.io/docs/concepts/workloads/pods/'],

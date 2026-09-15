@@ -1,5 +1,7 @@
 # Mesh Lab
 
+[Explore the free interactive guide](https://vitoraguila.github.io/mesh-lab/) · [Clone and run the lab](https://vitoraguila.github.io/mesh-lab/#install)
+
 A runnable local Kubernetes case study. Next.js 16.3.4 with strict TypeScript, seven business APIs across **three languages** (Go, Node.js, Python) speaking REST, GraphQL and gRPC, a Go WebSocket event service, RabbitMQ carrying telemetry, Prometheus and Grafana collecting metrics, and centralized Istio authorization. Every application owns its source, Dockerfile, Helm manifests, routes, security policies and environment settings.
 
 Everything is real: the browser interface drives live requests through the mesh, shows the decisions Envoy and the shared authz service actually made, follows each telemetry message through the broker, and reads its metric counters from Prometheus.
@@ -7,6 +9,13 @@ Everything is real: the browser interface drives live requests through the mesh,
 ## Install and run, from nothing
 
 These steps assume macOS with Homebrew. Nothing here touches a remote cluster: `stg` and `prd` are two namespaces in one local Minikube profile called `mesh-study`.
+
+Clone the repository before running any Make commands. Run all commands below from the repository root (`mesh-lab/`).
+
+```sh
+git clone https://github.com/vitoraguila/mesh-lab.git
+cd mesh-lab
+```
 
 ```sh
 # 1. Prerequisites: Docker Desktop running with ~8 GB memory, plus these runtimes.

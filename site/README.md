@@ -4,6 +4,9 @@ A single scrollable page that teaches how the microservice architecture in this
 repository works: containers, images, pods, nodes, namespaces, Helm, Istio and
 Envoy, ending with the commands that bring the whole thing up locally.
 
+The public page is a free, open learning case study. It does not require an
+account, collect a lead, or ask the visitor to exchange anything for access.
+
 Everything it claims is taken from the real project. The YAML excerpts, the
 authorization verdicts in the request console, and the commands in the install
 steps all match what `apps/` and `deploy/` actually contain.
@@ -11,20 +14,26 @@ steps all match what `apps/` and `deploy/` actually contain.
 ## Stack
 
 React 19, TypeScript, Vite 7 and Tailwind v4. Motion drives the scroll reveals
-and the request animation, GSAP ScrollTrigger drives the two pinned scroll
-sequences, Phosphor supplies the icons, and the technology logos come from the
+and the request animation, GSAP ScrollTrigger drives the desktop layers
+walkthrough, Phosphor supplies the icons, and the technology logos come from the
 Simple Icons CDN. The output is a static bundle, which is all GitHub Pages
 serves.
 
 ## Local development
 
 ```sh
-npm ci
-npm run dev          # http://localhost:5173
-npm run build        # static bundle in site/dist
-npm run preview      # serve that bundle
-npm run typecheck
+git clone https://github.com/vitoraguila/mesh-lab.git
+cd mesh-lab
+npm ci --prefix site
+npm run dev --prefix site          # http://localhost:5173
+npm run build --prefix site        # static bundle in site/dist
+npm run preview --prefix site      # serve that bundle
+npm run typecheck --prefix site
 ```
+
+This runs the public guide without Kubernetes. To run the actual cluster and
+studio, follow the [installation guide](https://vitoraguila.github.io/mesh-lab/#install)
+or the root [README](../README.md).
 
 ## Publishing to GitHub Pages
 
@@ -34,7 +43,8 @@ Actions source once, in the repository:
 
 **Settings → Pages → Build and deployment → Source: GitHub Actions**
 
-After that the page is served at `https://<owner>.github.io/<repo>/`. Vite is
+The page is served at https://vitoraguila.github.io/mesh-lab/ and its source is
+https://github.com/vitoraguila/mesh-lab. Vite is
 configured with `base: './'`, so the same bundle works at a repository subpath,
 at a custom domain, and from the local `dist` folder with no rebuild. `Actions →
 Deploy site to GitHub Pages → Run workflow` publishes on demand.
@@ -54,12 +64,14 @@ src/
     terms.tsx                 the term matcher and its tooltip
     manifests.ts              the real files shown in the explorer
   components/
-    Nav.tsx                   bar, live section anchor, the technology menu
-    Hero.tsx / HeroTopology   headline plus the looping packet diagram
+    Nav.tsx                   floating bar and live section anchor
+    SectionsMenu.tsx          native modal chapter index with focus containment
+    Hero.tsx / HeroTopology   animated headline, packet diagram, three flow links
+    LearningBridge.tsx          reading transition into the request experiment
     StackWall.tsx             technology marquee
     ArchitectureSection.tsx   every workload on one map, with its three flows
     LayersSection.tsx         pinned: machine, Docker, node, namespace, pod, containers
-    ImagesSection.tsx         pinned horizontal pan: source to running container
+    ImagesSection.tsx         click-through build steps, arrow-key tabs, next/previous controls
     ObjectsSection.tsx        the six Kubernetes objects, with live diagrams
     MeshSection.tsx           sidecar injection toggle, four Istio resources
     ManifestsSection.tsx      the file explorer, template against rendered
@@ -72,7 +84,7 @@ src/
     StudioPreview.tsx         real captures of the running studio
     CommandsSection.tsx       grouped command reference
     Footer.tsx                primary sources
-    ui/                       Reveal, Terminal, Code, Disclosure, Modal, TechIcon
+    ui/                       SectionTitle, Reveal, Terminal, Code, Disclosure, Modal, TechIcon
 ```
 
 ## Screenshots
@@ -97,10 +109,32 @@ exists, so the section is complete either way.
 
 ## Conventions
 
-One accent colour, signal orange, across both themes, with the technology brand
-marks keeping their own colours. `ok` and `deny` are data encoding inside
-diagrams only, never brand colour. Light is the default theme. Radii: surfaces 16px, chips
-8px, interactive elements pill. Every animation above a hover state is wrapped
-in `prefers-reduced-motion`, and the two pinned sequences fall back to ordinary
-scrolling. No scroll listeners: reveals use IntersectionObserver through Motion,
-and the pinned work goes through ScrollTrigger.
+Cobalt controls sit on lilac, lime, peach, mint, and sky chapter backgrounds,
+with darker counterparts in dark mode. This deliberately colorful direction
+uses LaunchDarkly as a visual reference: bold color blocks, asymmetric corners,
+offset surfaces, and geometric accents. Technology marks keep their own colours. `ok` and `deny` are data encoding inside diagrams,
+never brand colour. Light is the default theme. Space Grotesk sets the headings,
+Geist sets the body, and Geist Mono sets code; all three fonts are self-hosted.
+Radii: content surfaces 16px, chips 8px, interactive elements pill; chapter
+edges and the hero stage use larger asymmetric corners. Decorative shapes are
+non-interactive, hidden from assistive technology, and separate from diagram data.
+The hero shape entrance and offset-panel hover respect reduced motion.
+
+Headings reveal words in reading order. A scroll-linked reading pause connects
+the configuration chapters to the request console. The hero links directly to
+requests, events, and metrics; all original section anchors remain stable.
+Diagrams and the request console are illustrated models of project behavior,
+not live cluster observations. The studio captures are real screenshots.
+
+Motion respects `prefers-reduced-motion`. The layers sequence pins only
+on desktop with no reduced-motion preference, responding to preference and
+viewport changes. The image walkthrough never pins: all five steps are explicit
+tabs with arrow-key, Home/End, and next/previous navigation. Each selection
+animates the artifact and explanation without taking over page scrolling. Layers also have explicit buttons, so every explanation is
+available without scrolling through a pinned sequence. Reveals use Motion and
+pinning uses GSAP matchMedia/ScrollTrigger, with cleanup on unmount.
+
+Primary actions use lime, dark outlines, and offset press feedback. Secondary
+buttons are outlined; selected learning controls use a solid contrasting fill.
+The Sections index uses a native dialog for focus containment, Escape dismissal,
+and return of focus to its opener. Its chapter links keep the existing anchors.

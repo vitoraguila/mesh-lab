@@ -1,3 +1,4 @@
+import { LearningBridge } from './components/LearningBridge'
 import { Nav } from './components/Nav'
 import { Hero } from './components/Hero'
 import { StackWall } from './components/StackWall'
@@ -18,6 +19,7 @@ export function App() {
   return (
     <>
       <Nav />
+      <a className="skip-link" href="#overview">Skip to the guide</a>
       <main>
         <Hero />
         <StackWall />
@@ -27,6 +29,7 @@ export function App() {
         <ObjectsSection />
         <MeshSection />
         <ManifestsSection />
+        <LearningBridge />
         <JourneySection />
         <BrokersSection />
         <ObservabilitySection />

@@ -1,3 +1,4 @@
+import { SectionTitle } from './ui/SectionTitle'
 import { Reveal } from './ui/Reveal'
 import { Hi } from '../lib/terms'
 
@@ -43,13 +44,12 @@ const GROUPS: Group[] = [
 
 export function CommandsSection() {
   return (
-    <section id="commands"
-      style={{ ["--tint" as string]: "#7048e8" }} className="border-b border-line bg-canvas py-20 lg:py-28">
+    <section id="commands" className="border-b border-line bg-canvas py-20 lg:py-28">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <Reveal>
-          <h2 className="max-w-[24ch] text-[clamp(1.9rem,4.2vw,3.1rem)] leading-[1.05] font-medium tracking-[-0.03em] text-ink">
-            The commands worth remembering
-          </h2>
+          <SectionTitle>
+            Keep these commands close.
+          </SectionTitle>
           <p className="mt-5 max-w-[58ch] text-[16px] leading-relaxed text-muted">
             <Hi>
               {'Every target takes ENV=stg or ENV=prd, and most take APP=name to narrow the work to one service.'}

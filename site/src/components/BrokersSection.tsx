@@ -1,3 +1,4 @@
+import { SectionTitle } from './ui/SectionTitle'
 import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { LightningIcon, StackPlusIcon } from '@phosphor-icons/react'
@@ -150,12 +151,6 @@ function FlowCompare() {
                   </text>
                 </g>
               ))}
-              <text x="964" y="222" textAnchor="end" className="font-mono" fontSize="11" fill="var(--deny)">
-                one consumer down, and the write that started all this fails too
-              </text>
-              <text x="964" y="118" textAnchor="end" className="font-mono" fontSize="11" fill="var(--muted)">
-                catalog must know all three, and wait for all three
-              </text>
             </>
           ) : (
             <>
@@ -194,15 +189,23 @@ function FlowCompare() {
                   </text>
                 </g>
               ))}
-              <text x="964" y="222" textAnchor="end" className="font-mono" fontSize="11" fill="var(--ok)">
-                the third one is down, its messages wait in its queue
-              </text>
-              <text x="964" y="118" textAnchor="end" className="font-mono" fontSize="11" fill="var(--muted)">
-                catalog knows none of them
-              </text>
             </>
           )}
         </svg>
+      </div>
+
+      <div className="flow-callouts" aria-live="polite">
+        {mode === 'sync' ? (
+          <>
+            <p className="flow-callout flow-callout-danger">One consumer down, and the write that started all this fails too.</p>
+            <p className="flow-callout">Catalog must know all three, and wait for all three.</p>
+          </>
+        ) : (
+          <>
+            <p className="flow-callout flow-callout-success">The third one is down. Its messages wait in its queue.</p>
+            <p className="flow-callout">Catalog knows none of them.</p>
+          </>
+        )}
       </div>
 
       <AnimatePresence mode="wait" initial={false}>
@@ -286,7 +289,6 @@ export function BrokersSection() {
   return (
     <section
       id="events"
-      style={{ ['--tint' as string]: '#7048e8' }}
       className="border-b border-line bg-canvas pb-20 lg:pb-28"
     >
       <CurveBand>
@@ -296,16 +298,16 @@ export function BrokersSection() {
               {(['rabbitmq', 'apachekafka', 'natsdotio', 'apachepulsar'] as const).map((t) => (
                 <span
                   key={t}
-                  className="grid size-12 place-items-center rounded-2xl bg-white shadow-[0_8px_24px_-10px_rgb(0_0_0/0.4)]"
+                  className="grid size-12 place-items-center rounded-2xl border border-line bg-raised"
                 >
                   <TechIcon tech={t} size={26} />
                 </span>
               ))}
             </div>
-            <h2 className="max-w-[20ch] text-[clamp(1.9rem,4.2vw,3.1rem)] leading-[1.05] font-medium tracking-[-0.03em] text-white">
-              Events are how services stop depending on each other
-            </h2>
-            <p className="mt-5 max-w-[58ch] text-[16.5px] leading-relaxed text-white/90">
+            <SectionTitle>
+              Publish an event. Let services react.
+            </SectionTitle>
+            <p className="mt-5 max-w-[58ch] text-[16.5px] leading-relaxed text-muted">
               A request is a question you wait for an answer to. An event is a statement you publish
               and forget. Most of what makes a distributed system distributed is that second one.
             </p>
